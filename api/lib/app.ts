@@ -40,12 +40,10 @@ class App {
         });
 
         process.on('SIGINT', async () => {
-            await this.dbClient.end();
             console.log("PostgreSQL connection closed due to app termination");
         });
 
         process.on('SIGTERM', async () => {
-            await this.dbClient.end();
             console.log("PostgreSQL connection closed due to app termination");
         });
     }

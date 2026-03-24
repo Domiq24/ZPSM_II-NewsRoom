@@ -3,6 +3,8 @@ import type Controller from "./interfaces/controller.interface";
 import IndexController from "./controllers/index.controller";
 import {Client} from "pg";
 import {config} from "./config";
+import NewsController from "./controllers/news.controller";
+import NewsService from "./modules/services/news.service";
 
 const client = new Client({
     user: config.dbUser,
@@ -13,7 +15,10 @@ const client = new Client({
 });
 
 function createControllers(): Controller[] {
+    const newsService = new NewsService(client);
+
     return [
+        new NewsController(newsService),
         new IndexController(),
     ]
 }
