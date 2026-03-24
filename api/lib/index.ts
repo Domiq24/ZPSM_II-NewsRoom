@@ -1,6 +1,16 @@
 import App from './app';
 import type Controller from "./interfaces/controller.interface";
 import IndexController from "./controllers/index.controller";
+import {Client} from "pg";
+import {config} from "./config";
+
+const client = new Client({
+    user: config.dbUser,
+    password: config.dbPassword,
+    host: config.dbHost,
+    port: config.dbPort,
+    database: config.database
+});
 
 function createControllers(): Controller[] {
     return [
@@ -10,7 +20,7 @@ function createControllers(): Controller[] {
 
 const controllers: Controller[] = createControllers();
 
-const app: App = new App(controllers);
+const app: App = new App(client, controllers);
 
 app.app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
