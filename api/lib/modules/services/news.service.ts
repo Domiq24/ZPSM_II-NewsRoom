@@ -1,8 +1,9 @@
 import {INews} from "../models/news.model";
-import {Client} from "pg";
+import {Client, QueryResult} from "pg";
 
 class NewsService {
-    constructor(private client: Client) {}
+    constructor(private client: Client) {
+    }
 
     public async getAllNews(): Promise<INews[]> {
         try {
@@ -58,7 +59,7 @@ class NewsService {
             );
 
             let result;
-            if(rating.rowCount > 0) {
+            if (rating.rowCount > 0) {
                 result = await this.client.query(
                     "INSERT INTO news_room.ratings" +
                     `VALUES ${userID}, ${newsID}, ${value}`
@@ -90,7 +91,7 @@ class NewsService {
         }
     }
 
-    private formatNews(news) {
+    private formatNews(news: QueryResult<any>) {
         return news.rows.map(row => {
             return {
                 newsID: row.news_id,
