@@ -3,6 +3,7 @@ export interface INews {
     title: string;
     author: string;
     date: Date;
+    rating: number;
     topics: string[];
     source: string;
     introduction: string;

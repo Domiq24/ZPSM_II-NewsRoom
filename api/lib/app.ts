@@ -38,14 +38,6 @@ class App {
         this.dbClient.on('error', (error: Error) => {
             console.error('Error occured in database: ', error.stack);
         });
-
-        process.on('SIGINT', async () => {
-            console.log("PostgreSQL connection closed due to app termination");
-        });
-
-        process.on('SIGTERM', async () => {
-            console.log("PostgreSQL connection closed due to app termination");
-        });
     }
 
     public listen() {
