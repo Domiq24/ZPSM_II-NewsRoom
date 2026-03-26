@@ -1,5 +1,6 @@
 import express from 'express'
 import * as http from "http";
+import bodyParser from 'body-parser';
 import {Client} from "pg";
 import {config} from "./config";
 import Controller from "./interfaces/controller.interface";
@@ -13,8 +14,13 @@ class App {
         this.app = express();
         this.server = http.createServer(this.app);
         this.dbClient = dbClient;
-        this.connectToDatabase();
+        this.initializeMiddlewares();
         this.initializeControllers(controllers);
+        this.connectToDatabase();
+    }
+
+    private initializeMiddlewares(): void {
+        this.app.use(bodyParser.json());
     }
 
     private initializeControllers(controllers: Controller[]) {

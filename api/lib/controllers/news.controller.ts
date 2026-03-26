@@ -48,7 +48,7 @@ class IndexController implements Controller {
 
         try {
             if(await this.newsService.insertSavedNews(Number(userID), Number(newsID)))
-                return response.status(200);
+                return response.status(200).send({message: "News saved"});
             else
                 return response.status(404).send({error: "News not found"});
         } catch (error) {
@@ -63,12 +63,12 @@ class IndexController implements Controller {
 
         try {
             if(await this.newsService.insertOrUpdateRating(Number(userID), Number(newsID), Number(value)))
-                return response.status(200);
+                return response.status(200).send({message: "Rating added"});
             else
                 return response.status(404).send({error: "News not found"});
         } catch (error) {
             console.log("Error while rating news: ", error);
-            return response.status(403).send({error: error});
+            return response.status(403).send({error: error.stack});
         }
     }
 
@@ -78,7 +78,7 @@ class IndexController implements Controller {
 
         try {
             if(await this.newsService.deleteSavedNews(Number(userID), Number(newsID)))
-                return response.status(200);
+                return response.status(200).send({message: "Saved news deleted"});
             else
                 return response.status(404).send({error: "News not found"});
         } catch (error) {
