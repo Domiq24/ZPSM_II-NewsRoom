@@ -17,7 +17,7 @@ class IndexController implements Controller {
         this.router.get(`${this.path}/saved/:userID`, this.returnSavedNews);
         this.router.post(`${this.path}/saved/:userID`, this.saveNews);
         this.router.post(`${this.path}/rating/:userID`, this.rateNews);
-        this.router.delete(`${this.path}/saved/:userID`, this.deleteSavedNews);
+        this.router.delete(`${this.path}/saved/:userID/:newsID`, this.deleteSavedNews);
     }
 
     private returnAllNews = async (request: Request, response: Response) => {
@@ -73,8 +73,7 @@ class IndexController implements Controller {
     }
 
     private deleteSavedNews = async (request: Request, response: Response) => {
-        const {userID} = request.params;
-        const {newsID} = request.body;
+        const {userID, newsID} = request.params;
 
         try {
             if(await this.newsService.deleteSavedNews(Number(userID), Number(newsID)))
