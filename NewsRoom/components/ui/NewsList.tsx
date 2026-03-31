@@ -1,4 +1,4 @@
-import {FlatList, ScrollView, TouchableOpacity} from "react-native";
+import {FlatList, ScrollView, StyleSheet, TouchableOpacity} from "react-native";
 import { Box } from '@/components/ui/box';
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
@@ -30,8 +30,19 @@ const NewsListElement = ({newsItem}: {newsItem: News}) => {
 
 export default function NewsList({news}: {news: News[]}) {
     return (
-        <ScrollView>
-            <FlatList data={news} renderItem={({item}) => <NewsListElement newsItem={item} /> } />
-        </ScrollView>
+        <Box style={styles.list}>
+            <FlatList
+                data={news}
+                renderItem={({item}) => <NewsListElement newsItem={item} /> }
+                keyExtractor={item => item.newsID}
+            />
+        </Box>
     )
 }
+
+const styles = StyleSheet.create({
+    list: {
+        flex: 1,
+        flexDirection: 'column',
+    }
+})

@@ -19,6 +19,7 @@ export default function TabLayout() {
                 name="index"
                 options={{
                     title: 'Home',
+                    headerShown: true,
                     tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
                 }}
             />
@@ -26,6 +27,7 @@ export default function TabLayout() {
                 name="saved"
                 options={{
                     title: 'Saved',
+                    headerShown: true,
                     tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
                 }}
             />

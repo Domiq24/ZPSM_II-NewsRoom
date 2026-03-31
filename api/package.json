@@ -13,10 +13,12 @@
   "dependencies": {
     "@types/pg": "^8.20.0",
     "body-parser": "^1.20.3",
+    "cors": "^2.8.6",
     "express": "5.1.0",
     "pg": "^8.20.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
     "@types/node": "^14.18.33",
     "nodemon": "^3.1.0",
