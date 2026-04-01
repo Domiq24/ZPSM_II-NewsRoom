@@ -16,10 +16,10 @@ import { ChevronDownIcon, SearchIcon } from '@/components/ui/icon';
 import { Input, InputField, InputSlot, InputIcon } from "@/components/ui/input";
 import { StyleSheet } from "react-native";
 
-export default function HomeToolbar() {
+export default function HomeToolbar({setOpen}: {setOpen: (open: boolean) => void}) {
     return (
         <Box style={styles.toolbar}>
-            <Button style={styles.filter}>
+            <Button style={styles.filter} onPress={() => setOpen(true)}>
                 <ButtonText style={{color: "white", fontSize: 16}}>Filters</ButtonText>
             </Button>
             <Select style={{flex: 1}}>

@@ -3,34 +3,46 @@ import NewsList from "@/components/ui/NewsList";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import News from "@/interfaces/news.interface";
-import {Box} from "@/components/ui/box";
 import {SafeAreaProvider} from "react-native-safe-area-context";
-import { Stack } from "expo-router"
+import Preferences from "@/interfaces/preferences.interface";
+import FiltersDialog from "@/components/ui/FiltersDialog";
 
 export default function HomeScreen() {
     const [news, setNews] = useState<News[]>([])
+    const [pref, setPref] = useState<Preferences>({
+        search: "",
+        sort: "rating_asc",
+        tags: [],
+        ratingFrom: 0,
+        ratingTo: 5,
+        dateFrom: null,
+        dateTo: null
+    });
+    const [filtOpen, setFiltOpen] = useState(false)
 
     const fetchNews = async () => {
-        await axios.get("http://localhost:3100/news", {
+        await axios.get("http://172.22.23.12:3100/news", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json'
             }
         })
         .then(res => {
-            setNews(res.data);
+            setNews(res.data.map(newsItem => {
+                return {
+                    newsID: newsItem.newsID,
+                    title: newsItem.title,
+                    author: newsItem.author,
+                    date: new Date(newsItem.date),
+                    rating: newsItem.rating === null ? 0 : newsItem.rating,
+                    topics: [...newsItem.topics],
+                    source: newsItem.source,
+                    introduction: newsItem.introduction
+                }
+            }));
         })
         .catch(error => {
-            if (error.response) {
-                // Serwer odpowiedział kodem statusu poza zakresem 2xx
-                console.error('Błąd odpowiedzi:', error.response.data);
-            } else if (error.request) {
-                // Żądanie wysłane, ale brak odpowiedzi
-                console.error('Błąd sieci:', error.request);
-            } else {
-                // Błąd konfiguracji żądania
-                console.error('Błąd konfiguracji:', error.message);
-            }
+            console.error(error.message)
         })
     }
 
@@ -40,8 +52,9 @@ export default function HomeScreen() {
 
     return (
         <SafeAreaProvider>
-            {true && <HomeToolbar />}
-            {true && <NewsList news={news} />}
+            <HomeToolbar setOpen={setFiltOpen} />
+            <NewsList news={news} setNews={setNews} pref={pref} />
+            <FiltersDialog open={filtOpen} setOpen={setFiltOpen} pref={pref} setPref={setPref} />
         </SafeAreaProvider>
     );
 }

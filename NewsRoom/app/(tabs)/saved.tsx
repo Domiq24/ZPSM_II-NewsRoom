@@ -8,14 +8,29 @@ export default function SavedNewsScreen() {
     const [savedNews, setSavedNews] = useState<News[]>([])
 
     const fetchSavedNews = async () => {
-        try {
-            await axios.get("http://localhost:3100/news/saved/2")
-                .then(res => {
-                    setSavedNews(res.data);
-                });
-        } catch (error) {
-            console.log(error);
-        }
+        await axios.get("http://172.22.23.12:3100/news/saved/2", {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': ' application/json'
+            }
+        })
+        .then(res => {
+            setSavedNews(res.data.map(newsItem => {
+                return {
+                    newsID: newsItem.newsID,
+                    title: newsItem.title,
+                    author: newsItem.author,
+                    date: new Date(newsItem.date),
+                    rating: newsItem.rating,
+                    topics: [...newsItem.topics],
+                    source: newsItem.source,
+                    introduction: newsItem.introduction
+                }
+            }));
+        })
+        .catch(error => {
+            console.error(error.message)
+        })
     }
 
     useEffect(() => {
