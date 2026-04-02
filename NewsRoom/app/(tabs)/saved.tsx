@@ -3,9 +3,19 @@ import {Box} from "@/components/ui/box";
 import {useEffect, useState} from "react";
 import News from "@/interfaces/news.interface";
 import axios from "axios";
+import Preferences from "@/interfaces/preferences.interface";
 
 export default function SavedNewsScreen() {
     const [savedNews, setSavedNews] = useState<News[]>([])
+    const [savedPref, setSavedPref] = useState<Preferences>({
+        search: "",
+        sort: "rating_asc",
+        tags: [],
+        ratingFrom: 0,
+        ratingTo: 5,
+        dateFrom: null,
+        dateTo: null
+    })
 
     const fetchSavedNews = async () => {
         await axios.get("http://172.22.23.12:3100/news/saved/2", {
@@ -17,14 +27,9 @@ export default function SavedNewsScreen() {
         .then(res => {
             setSavedNews(res.data.map(newsItem => {
                 return {
-                    newsID: newsItem.newsID,
-                    title: newsItem.title,
-                    author: newsItem.author,
+                    ...newsItem,
                     date: new Date(newsItem.date),
-                    rating: newsItem.rating,
-                    topics: [...newsItem.topics],
-                    source: newsItem.source,
-                    introduction: newsItem.introduction
+                    rating: newsItem.rating === null ? 0 : newsItem.rating
                 }
             }));
         })
@@ -39,7 +44,7 @@ export default function SavedNewsScreen() {
 
     return (
         <Box>
-            <NewsList news={savedNews} />
+            <NewsList news={savedNews} pref={savedPref} fetchNews={fetchSavedNews} />
         </Box>
     );
 }

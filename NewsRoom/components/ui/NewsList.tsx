@@ -1,17 +1,21 @@
-import {FlatList, StyleSheet, TouchableOpacity} from "react-native";
+import {FlatList, RefreshControl, StyleSheet, TouchableOpacity} from "react-native";
 import { Box } from '@/components/ui/box';
 import { Text } from "@/components/ui/text";
 import News from '@/interfaces/news.interface';
 import {useEffect, useState} from "react";
 import Preferences from "@/interfaces/preferences.interface";
+import { useRouter, Router } from "expo-router";
 
-const NewsListElement = ({newsItem}: {newsItem: News}) => {
+const NewsListElement = ({newsItem, router}: {newsItem: News, router: Router}) => {
     const dateFormat = (date: Date) => {
         return `${date.getDate()}.${(date.getMonth()+1).toString().padStart(2, '0')}.${date.getFullYear()}`
     }
 
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push({
+            pathname: "/details",
+            params: { newsItem: JSON.stringify(newsItem) }
+        })}>
             <Box style={styles.item_container}>
                 <Box style={styles.item_top}>
                     <Text numberOfLines={2} style={{flex: 2, fontSize: 18, fontWeight: 'bold'}}>{newsItem.title}</Text>
@@ -33,15 +37,22 @@ const NewsListElement = ({newsItem}: {newsItem: News}) => {
     );
 }
 
-export default function NewsList({news, pref}: {news: News[], pref: Preferences}) {
-    const [filtNews, setFiltNews] = useState<News[]>([])
+export default function NewsList({news, pref, fetchNews}: {news: News[], pref: Preferences, fetchNews: () => Promise<void>}) {
+    const [filtNews, setFiltNews] = useState<News[]>([]);
+    const [refreshing, setRefreshing] = useState(false);
+    const router = useRouter();
 
-    const searchNews = () => {
-        setFiltNews(news.filter(n => (pref.search === "" || n.title.includes(pref.search))));
-    }
+    const applyPreferences = () => {
+        let tmpNews = news.filter(n => {
+            if(pref.search === "") {
+                return true;
+            }
+            const tmpSearch = pref.search.toLowerCase();
+            const tmpTitle = n.title.toLowerCase();
+            return tmpTitle.includes(tmpSearch);
+        });
 
-    const filterNews = () => {
-        setFiltNews(news.filter(n => {
+        tmpNews = tmpNews.filter(n => {
             return (
                 pref.tags.every((tag: string) => n.topics.includes(tag)) &&
                 n.rating >= pref.ratingFrom &&
@@ -49,33 +60,38 @@ export default function NewsList({news, pref}: {news: News[], pref: Preferences}
                 (pref.dateFrom === null || pref.dateFrom <= n.date) &&
                 (pref.dateTo === null || pref.dateTo >= n.date)
             )
-        }));
-    }
+        });
 
-    const sortNews = () => {
         switch(pref.sort) {
             case "latest":
-                setFiltNews(filtNews.sort((a, b) => b.date.getMilliseconds() - a.date.getMilliseconds()));
+                tmpNews = tmpNews.sort((a, b) => b.date.getMilliseconds() - a.date.getMilliseconds());
                 break;
             case "rate_asc":
-                setFiltNews(filtNews.sort((a, b) => a.rating - b.rating));
+                tmpNews = tmpNews.sort((a, b) => a.rating - b.rating);
                 break;
             case "rate_dsc":
-                setFiltNews(filtNews.sort((a, b) => b.rating - a.rating));
+                tmpNews = tmpNews.sort((a, b) => b.rating - a.rating);
                 break;
             case "author":
-                setFiltNews(filtNews.sort((a, b) => a.author.localeCompare(b.author)));
+                tmpNews = tmpNews.sort((a, b) => a.author.localeCompare(b.author));
                 break;
             case "title":
-                setFiltNews(filtNews.sort((a, b) => a.title.localeCompare(b.title)));
+                tmpNews = tmpNews.sort((a, b) => a.title.localeCompare(b.title));
                 break;
         }
+
+        setFiltNews(tmpNews);
+    }
+
+    const handleRefresh = async () => {
+        setRefreshing(true);
+        await fetchNews().then(() => setRefreshing(false))
     }
 
     useEffect(() => {
-        //searchNews();
-        filterNews();
-        sortNews();
+        setRefreshing(true)
+        applyPreferences();
+        setRefreshing(false)
     }, [news, pref]);
 
     return (
@@ -83,8 +99,13 @@ export default function NewsList({news, pref}: {news: News[], pref: Preferences}
             <FlatList
                 style={{paddingBottom: 8}}
                 data={filtNews}
-                renderItem={({item}) => <NewsListElement newsItem={item} /> }
+                extraData={refreshing}
+                renderItem={({item}) => <NewsListElement newsItem={item} router={router} /> }
                 keyExtractor={(item) => item.newsID.toString()}
+                refreshControl={<RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={handleRefresh}
+                />}
             />
         </Box>
     )

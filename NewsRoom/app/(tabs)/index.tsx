@@ -8,17 +8,17 @@ import Preferences from "@/interfaces/preferences.interface";
 import FiltersDialog from "@/components/ui/FiltersDialog";
 
 export default function HomeScreen() {
-    const [news, setNews] = useState<News[]>([])
+    const [news, setNews] = useState<News[]>([]);
     const [pref, setPref] = useState<Preferences>({
         search: "",
-        sort: "rating_asc",
+        sort: "latest",
         tags: [],
         ratingFrom: 0,
         ratingTo: 5,
         dateFrom: null,
         dateTo: null
     });
-    const [filtOpen, setFiltOpen] = useState(false)
+    const [filtOpen, setFiltOpen] = useState(false);
 
     const fetchNews = async () => {
         await axios.get("http://172.22.23.12:3100/news", {
@@ -30,20 +30,15 @@ export default function HomeScreen() {
         .then(res => {
             setNews(res.data.map(newsItem => {
                 return {
-                    newsID: newsItem.newsID,
-                    title: newsItem.title,
-                    author: newsItem.author,
+                    ...newsItem,
                     date: new Date(newsItem.date),
-                    rating: newsItem.rating === null ? 0 : newsItem.rating,
-                    topics: [...newsItem.topics],
-                    source: newsItem.source,
-                    introduction: newsItem.introduction
+                    rating: newsItem.rating === null ? 0 : newsItem.rating
                 }
             }));
         })
         .catch(error => {
             console.error(error.message)
-        })
+        });
     }
 
     useEffect(() => {
@@ -52,8 +47,8 @@ export default function HomeScreen() {
 
     return (
         <SafeAreaProvider>
-            <HomeToolbar setOpen={setFiltOpen} />
-            <NewsList news={news} setNews={setNews} pref={pref} />
+            <HomeToolbar pref={pref} setPref={setPref} setOpen={setFiltOpen} />
+            <NewsList news={news} pref={pref} fetchNews={fetchNews} />
             <FiltersDialog open={filtOpen} setOpen={setFiltOpen} pref={pref} setPref={setPref} />
         </SafeAreaProvider>
     );

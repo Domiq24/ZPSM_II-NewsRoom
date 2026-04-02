@@ -1,46 +1,38 @@
 import { Box } from '@/components/ui/box'
 import { Button, ButtonText } from "@/components/ui/button";
-import {
-    Select,
-    SelectTrigger,
-    SelectInput,
-    SelectIcon,
-    SelectPortal,
-    SelectBackdrop,
-    SelectContent,
-    SelectDragIndicator,
-    SelectDragIndicatorWrapper,
-    SelectItem,
-} from '@/components/ui/select';
+import { Picker } from "@react-native-picker/picker";
 import { ChevronDownIcon, SearchIcon } from '@/components/ui/icon';
 import { Input, InputField, InputSlot, InputIcon } from "@/components/ui/input";
 import { StyleSheet } from "react-native";
+import Preferences from "@/interfaces/preferences.interface";
 
-export default function HomeToolbar({setOpen}: {setOpen: (open: boolean) => void}) {
+export default function HomeToolbar({pref, setPref, setOpen}: {pref: Preferences, setPref: (pref: Preferences) => void, setOpen: (open: boolean) => void}) {
+    const handleInput = (value: string, name: string) => {
+        setPref({
+            ...pref,
+            [name]: value
+        });
+    }
+
     return (
         <Box style={styles.toolbar}>
             <Button style={styles.filter} onPress={() => setOpen(true)}>
                 <ButtonText style={{color: "white", fontSize: 16}}>Filters</ButtonText>
             </Button>
-            <Select style={{flex: 1}}>
-                <SelectTrigger style={styles.sort}>
-                    <SelectInput style={{color: "white"}} placeholder="Sort" />
-                    <SelectIcon as={ChevronDownIcon} width={18} height={18} fill="#00000000" stroke="#FFFFFF" />
-                </SelectTrigger>
-                <SelectPortal>
-                    <SelectBackdrop />
-                    <SelectContent>
-                        <SelectDragIndicatorWrapper>
-                            <SelectDragIndicator />
-                        </SelectDragIndicatorWrapper>
-                        <SelectItem label="Latest" value="latest" />
-                        <SelectItem label="Rating ascending" value="rate_asc" />
-                        <SelectItem label="Rating descending" value="rate_dsc" />
-                        <SelectItem label="By author" value="author" />
-                        <SelectItem label="By title" value="title" />
-                    </SelectContent>
-                </SelectPortal>
-            </Select>
+            <Picker
+                selectedValue={pref.sort}
+                onValueChange={(itemValue) => handleInput(itemValue, "sort")}
+                style={styles.sort}
+                mode="dropdown"
+                dropdownIconColor="white"
+                selectionColor="#2080FF"
+            >
+                <Picker.Item label="Latest" value="latest" />
+                <Picker.Item label="Rating ascending" value="rating_asc" />
+                <Picker.Item label="Rating descending" value="rating_dsc" />
+                <Picker.Item label="Author" value="author" />
+                <Picker.Item label="Title" value="tilte" />
+            </Picker>
             <Input
                 variant="rounded"
                 size="sm"
@@ -49,7 +41,7 @@ export default function HomeToolbar({setOpen}: {setOpen: (open: boolean) => void
                 <InputSlot >
                     <InputIcon as={SearchIcon} width={16} height={16} fill="#00000000" />
                 </InputSlot>
-                <InputField placeholder="Search" />
+                <InputField onChangeText={(itemValue) => handleInput(itemValue, "search")} placeholder="Search" />
             </Input>
         </Box>
     );
@@ -75,19 +67,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8
     },
     sort: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        borderStyle: "solid",
-        borderColor: "white",
-        borderWidth: 2,
-        borderRadius: 16,
-        paddingHorizontal: 8,
-        paddingVertical: 0,
-        height: 38
+        flex: 1.2,
+        color: "white"
     },
     search: {
-        flex: 1,
+        flex: 1.5,
         backgroundColor: 'white',
         flexDirection: "row",
         alignItems: "center",
