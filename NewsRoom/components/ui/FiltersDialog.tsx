@@ -191,9 +191,6 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         width: 96,
         borderRadius: 8,
-        ":pressed": {
-            backgroundColor: "#1020E0"
-        }
     },
     clear_button: {
         borderColor: "#D02020",
