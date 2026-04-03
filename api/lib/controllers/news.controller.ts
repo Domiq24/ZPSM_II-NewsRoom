@@ -15,6 +15,7 @@ class IndexController implements Controller {
     private initializeRoutes() {
         this.router.get(this.path, this.returnAllNews);
         this.router.get(`${this.path}/saved/:userID`, this.returnSavedNews);
+        this.router.get(`${this.path}/rating/:userID/:newsID`, this.returnUserNewsRating);
         this.router.post(`${this.path}/saved/:userID`, this.saveNews);
         this.router.post(`${this.path}/rating/:userID`, this.rateNews);
         this.router.delete(`${this.path}/saved/:userID/:newsID`, this.deleteSavedNews);
@@ -26,7 +27,7 @@ class IndexController implements Controller {
             return response.status(200).send(news);
         } catch (error) {
             console.log("Error while requesting news data: ", error);
-            return response.status(403).send({error: error});
+            return response.status(500).send({error: error});
         }
     }
 
@@ -38,7 +39,22 @@ class IndexController implements Controller {
             return response.status(200).send(news);
         } catch (error) {
             console.log("Error while requesting saved news data: ", error);
-            return response.status(403).send({error: error});
+            return response.status(500).send({error: error});
+        }
+    }
+
+    private returnUserNewsRating = async (request: Request, response: Response) => {
+        const {userID, newsID} = request.params;
+
+        try {
+            const rating = await this.newsService.getUserNewsRating(Number(userID), Number(newsID));
+            if(rating)
+                return response.status(200).send(rating);
+            else
+                return response.status(200).send({value: 0});
+        } catch (error) {
+            console.log("Error while requesting user's news rating", error);
+            return response.status(500).send({error: error})
         }
     }
 
@@ -53,7 +69,7 @@ class IndexController implements Controller {
                 return response.status(404).send({error: "News not found"});
         } catch (error) {
             console.log("Error while saving news: ", error);
-            return response.status(403).send({error: error});
+            return response.status(500).send({error: error});
         }
     }
 
@@ -68,7 +84,7 @@ class IndexController implements Controller {
                 return response.status(404).send({error: "News not found"});
         } catch (error) {
             console.log("Error while rating news: ", error);
-            return response.status(403).send({error: error.stack});
+            return response.status(500).send({error: error.stack});
         }
     }
 
@@ -82,7 +98,7 @@ class IndexController implements Controller {
                 return response.status(404).send({error: "News not found"});
         } catch (error) {
             console.log("Error while deleting saved news: ", error);
-            return response.status(403).send({error: error});
+            return response.status(500).send({error: error});
         }
     }
 

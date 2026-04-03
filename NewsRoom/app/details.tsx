@@ -3,6 +3,7 @@ import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { Divider } from "@/components/ui/divider";
 import {Button, ButtonText} from "@/components/ui/button";
+import { HStack } from "@/components/ui/hstack";
 import News from "@/interfaces/news.interface";
 import {ScrollView} from "react-native";
 import axios from "axios";
@@ -10,7 +11,7 @@ import {useEffect, useState} from "react";
 import { useLocalSearchParams } from "expo-router";
 import RateDialog from "@/components/ui/RateDialog";
 import { StyleSheet } from "react-native";
-import {HStack} from "@/components/ui/hstack";
+import { StarRatingDisplay } from "react-native-star-rating-widget";
 import * as Linking from 'expo-linking';
 
 export default function DetailsScreen() {
@@ -87,20 +88,25 @@ export default function DetailsScreen() {
     return (
         <>
             <Box style={{padding: 16}}>
-                <Heading size="2xl" style={{marginBottom: 0}}>{newsItem.title}</Heading>
+                <Heading size="2xl" style={{marginVertical: 0}}>{newsItem.title}</Heading>
                 <Box style={styles.tags}>
                     {newsItem.topics.map((topic) => {
                         return (<Text style={{color: "#2080FF"}}>#{topic}</Text>);
                     })}
                 </Box>
                 <HStack style={styles.info}>
-                    <Box style={{flex: 2.5}}>
+                    <Box style={{flex: 2}}>
                         <Text style={{fontSize: 16}}>{newsItem.author}</Text>
                         <Text style={{fontSize: 16}}>{formatDate(newsItem.date)}</Text>
                         <Text numberOfLines={1}>{newsItem.source}</Text>
                     </Box>
-                    <Box style={{flex: 1, alignItems: "center"}}>
-                        <Text>{newsItem.rating}</Text>
+                    <Box style={{flex: 1, alignItems: "flex-end", justifyContent: "space-evenly"}}>
+                        <StarRatingDisplay
+                            rating={newsItem.rating}
+                            starSize={16}
+                            color="#F0B020"
+                            emptyColor="#909090"
+                        />
                         {isSaved ?
                             <Button style={{...styles.filled_button, ...styles.save_button}} onPress={() => forgetNews()}>
                                 <ButtonText style={{textAlign: "center", color: "white"}}>Saved</ButtonText>
@@ -116,10 +122,10 @@ export default function DetailsScreen() {
                 </ScrollView>
                 <Box style={styles.button_box}>
                     <Button style={{...styles.bottom_buttons, ...styles.filled_button}} onPress={() => Linking.openURL(newsItem.source)}>
-                        <ButtonText style={{color: "white", fontSize: 18, textAlign: "center"}}>See more</ButtonText>
+                        <ButtonText style={{...styles.button_text,color: "white"}}>See more</ButtonText>
                     </Button>
                     <Button style={{...styles.bottom_buttons, ...styles.outline_button}} onPress={() => setRateOpen(true)}>
-                        <ButtonText style={{color: "#2080FF", fontSize: 18, textAlign: "center"}}>Rate</ButtonText>
+                        <ButtonText style={{...styles.button_text, color: "#2080FF"}}>Rate</ButtonText>
                     </Button>
                 </Box>
             </Box>
@@ -137,7 +143,6 @@ const styles = StyleSheet.create({
     info: {
         flexDirection: "row",
         marginTop: 16,
-        gap: 8,
         borderBottomWidth: 2,
         borderColor: "#000000",
         paddingBottom: 16
@@ -163,5 +168,10 @@ const styles = StyleSheet.create({
     save_button: {
         padding: 1,
         width: 64
+    },
+    button_text: {
+        fontSize: 18,
+        textAlign: "center",
+        fontWeight: "bold"
     }
 })

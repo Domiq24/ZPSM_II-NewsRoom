@@ -1,7 +1,7 @@
 import { Box } from '@/components/ui/box'
-import { Button, ButtonText } from "@/components/ui/button";
+import {Button, ButtonIcon, ButtonText} from "@/components/ui/button";
 import { Picker } from "@react-native-picker/picker";
-import { ChevronDownIcon, SearchIcon } from '@/components/ui/icon';
+import {ChevronDownIcon, MenuIcon, SearchIcon} from '@/components/ui/icon';
 import { Input, InputField, InputSlot, InputIcon } from "@/components/ui/input";
 import { StyleSheet } from "react-native";
 import Preferences from "@/interfaces/preferences.interface";
@@ -17,7 +17,8 @@ export default function HomeToolbar({pref, setPref, setOpen}: {pref: Preferences
     return (
         <Box style={styles.toolbar}>
             <Button style={styles.filter} onPress={() => setOpen(true)}>
-                <ButtonText style={{color: "white", fontSize: 16}}>Filters</ButtonText>
+                <ButtonIcon as={MenuIcon} stroke="white" width={16} height={16} />
+                <ButtonText style={{color: "white", fontSize: 16, marginHorizontal: 4}}>Filters</ButtonText>
             </Button>
             <Picker
                 selectedValue={pref.sort}
@@ -59,16 +60,15 @@ const styles = StyleSheet.create({
     },
     filter: {
         flex: 1,
-        borderColor: "white",
-        borderWidth: 2,
-        borderStyle: "solid",
+        flexDirection: "row",
+        alignItems: "center",
         borderRadius: 16,
         paddingVertical: 6,
-        paddingHorizontal: 8
+        paddingHorizontal: 8,
     },
     sort: {
         flex: 1.2,
-        color: "white"
+        color: "white",
     },
     search: {
         flex: 1.5,

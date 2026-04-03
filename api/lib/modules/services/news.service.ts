@@ -30,11 +30,24 @@ class NewsService {
                 "ON n.news_id = r.news_id " +
                 `WHERE n.news_id IN (SELECT sn.news_id FROM news_room.saved_news sn WHERE sn.user_id = ${userID}) ` +
                 "GROUP BY n.news_id"
-            )
+            );
             return this.formatNews(data);
         } catch (error) {
             console.error("Error while getting saved news data: ", error);
             throw new Error("Error while getting saved news data");
+        }
+    }
+
+    public async getUserNewsRating(userID: number, newsID: number) {
+        try {
+            const data = await this.client.query(
+                "SELECT value FROM news_room.ratings " +
+                `WHERE user_id=${userID} AND news_id=${newsID}`
+            );
+            return data.rows[0]
+        } catch (error) {
+            console.error("Error while getting news rating: ", error);
+            throw new Error("Error while getting news rating");
         }
     }
 

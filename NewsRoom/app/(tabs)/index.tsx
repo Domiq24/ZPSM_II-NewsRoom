@@ -19,6 +19,8 @@ export default function HomeScreen() {
         dateTo: null
     });
     const [filtOpen, setFiltOpen] = useState(false);
+    const [minDate, setMinDate] = useState(new Date());
+    const [maxDate, setMaxDate] = useState(new Date());
 
     const fetchNews = async () => {
         await axios.get("http://172.22.23.12:3100/news", {
@@ -28,7 +30,7 @@ export default function HomeScreen() {
             }
         })
         .then(res => {
-            setNews(res.data.map(newsItem => {
+            setNews(res.data.map((newsItem: News) => {
                 return {
                     ...newsItem,
                     date: new Date(newsItem.date),
@@ -45,11 +47,18 @@ export default function HomeScreen() {
         fetchNews();
     }, []);
 
+    useEffect(() => {
+        if(news) {
+            setMinDate(news.reduce((prev, next) => { return prev.date < next.date ? prev : next }, {date: news[0].date}).date);
+            setMaxDate(news.reduce((prev, next) => { return prev.date > next.date ? prev : next }, {date: news[0].date}).date);
+        }
+    }, [news]);
+
     return (
         <SafeAreaProvider>
             <HomeToolbar pref={pref} setPref={setPref} setOpen={setFiltOpen} />
             <NewsList news={news} pref={pref} fetchNews={fetchNews} />
-            <FiltersDialog open={filtOpen} setOpen={setFiltOpen} pref={pref} setPref={setPref} />
+            <FiltersDialog open={filtOpen} setOpen={setFiltOpen} pref={pref} setPref={setPref} minDate={minDate} maxDate={maxDate} />
         </SafeAreaProvider>
     );
 }

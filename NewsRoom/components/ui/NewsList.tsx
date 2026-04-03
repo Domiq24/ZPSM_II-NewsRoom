@@ -5,6 +5,7 @@ import News from '@/interfaces/news.interface';
 import {useEffect, useState} from "react";
 import Preferences from "@/interfaces/preferences.interface";
 import { useRouter, Router } from "expo-router";
+import { StarRatingDisplay } from "react-native-star-rating-widget";
 
 const NewsListElement = ({newsItem, router}: {newsItem: News, router: Router}) => {
     const dateFormat = (date: Date) => {
@@ -12,14 +13,19 @@ const NewsListElement = ({newsItem, router}: {newsItem: News, router: Router}) =
     }
 
     return (
-        <TouchableOpacity onPress={() => router.push({
+        <TouchableOpacity activeOpacity={0.8} onPress={() => router.push({
             pathname: "/details",
             params: { newsItem: JSON.stringify(newsItem) }
         })}>
             <Box style={styles.item_container}>
                 <Box style={styles.item_top}>
                     <Text numberOfLines={2} style={{flex: 2, fontSize: 18, fontWeight: 'bold'}}>{newsItem.title}</Text>
-                    <Text style={{flex: 1}}>{newsItem.rating}</Text>
+                    <StarRatingDisplay
+                        rating={newsItem.rating}
+                        starSize={16}
+                        color="#E0A020"
+                        emptyColor="#808080"
+                    />
                 </Box>
                 <Box style={styles.item_bottom}>
                     <Box style={{flex: 1}}>
@@ -127,7 +133,8 @@ const styles = StyleSheet.create({
     item_top: {
         flex: 1,
         flexDirection: 'row',
-        gap: 4
+        gap: 4,
+        alignItems: "center"
     },
     item_bottom: {
         flex: 1,
