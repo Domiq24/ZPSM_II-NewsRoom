@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import {Client} from "pg";
 import {config} from "./config";
 import Controller from "./interfaces/controller.interface";
+import cors from "cors"
 
 class App {
     public app: express.Application;
@@ -14,6 +15,7 @@ class App {
         this.app = express();
         this.server = http.createServer(this.app);
         this.dbClient = dbClient;
+        this.app.use(cors());
         this.initializeMiddlewares();
         this.initializeControllers(controllers);
         this.connectToDatabase();
