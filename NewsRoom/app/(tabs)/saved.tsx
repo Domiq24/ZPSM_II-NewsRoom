@@ -18,7 +18,7 @@ export default function SavedNewsScreen() {
     })
 
     const fetchSavedNews = async () => {
-        await axios.get("http://172.22.23.12:3100/news/saved/2", {
+        await axios.get("http://192.168.0.123:3100/news/saved/2", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json'

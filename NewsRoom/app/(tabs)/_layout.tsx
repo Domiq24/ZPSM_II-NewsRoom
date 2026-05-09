@@ -28,7 +28,7 @@ export default function TabLayout() {
                 options={{
                     title: 'Saved',
                     headerShown: true,
-                    tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+                    tabBarIcon: ({ color }) => <IconSymbol size={28} name="save.fill" color={color} />,
                 }}
             />
         </Tabs>

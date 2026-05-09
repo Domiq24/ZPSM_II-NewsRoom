@@ -17,7 +17,7 @@ export default function RateDialog({id, open, setOpen}: {id: number, open: boole
     const [rating, setRating] = useState(0);
 
     const fetchNewsRating = async () => {
-        await axios.get(`http://172.22.23.12:3100/news/rating/2/${id}`, {
+        await axios.get(`http://192.168.0.123:3100/news/rating/2/${id}`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json'
@@ -30,7 +30,7 @@ export default function RateDialog({id, open, setOpen}: {id: number, open: boole
     const rateNews = async () => {
         if(rating == 0)
             return
-        await axios.post("http://172.22.23.12:3100/news/rating/2", {
+        await axios.post("http://192.168.0.123:3100/news/rating/2", {
             newsID: id,
             value: rating
         }, {

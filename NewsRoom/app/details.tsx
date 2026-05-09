@@ -30,7 +30,7 @@ export default function DetailsScreen() {
     const params = useLocalSearchParams();
 
     const checkIfNewsSaved = async (item: News) => {
-        await axios.get("http://172.22.23.12:3100/news/saved/2", {
+        await axios.get("http://192.168.0.123:3100/news/saved/2", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json'
@@ -47,7 +47,7 @@ export default function DetailsScreen() {
     }
 
     const saveNews = async () => {
-        await axios.post("http://172.22.23.12:3100/news/saved/2", {
+        await axios.post("http://192.168.0.123:3100/news/saved/2", {
             newsID: newsItem.newsID
         }, {
             headers: {
@@ -60,7 +60,7 @@ export default function DetailsScreen() {
     }
 
     const forgetNews = async () => {
-        await axios.delete(`http://172.22.23.12:3100/news/saved/2/${newsItem.newsID}`, {
+        await axios.delete(`http://192.168.0.123:3100/news/saved/2/${newsItem.newsID}`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json'

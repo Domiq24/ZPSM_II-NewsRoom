@@ -23,10 +23,10 @@ export default function HomeScreen() {
     const [maxDate, setMaxDate] = useState(new Date());
 
     const fetchNews = async () => {
-        await axios.get("http://172.22.23.12:3100/news", {
+        await axios.get("http://192.168.0.123:3100/news", {
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': ' application/json'
+                'Content-Type': ' application/json',
             }
         })
         .then(res => {
@@ -34,7 +34,7 @@ export default function HomeScreen() {
                 return {
                     ...newsItem,
                     date: new Date(newsItem.date),
-                    rating: newsItem.rating === null ? 0 : newsItem.rating
+                    rating: newsItem.rating === null ? 0 : newsItem.rating,
                 }
             }));
         })
@@ -48,7 +48,7 @@ export default function HomeScreen() {
     }, []);
 
     useEffect(() => {
-        if(news) {
+        if(news.length > 0) {
             setMinDate(news.reduce((prev, next) => { return prev.date < next.date ? prev : next }, {date: news[0].date}).date);
             setMaxDate(news.reduce((prev, next) => { return prev.date > next.date ? prev : next }, {date: news[0].date}).date);
         }
