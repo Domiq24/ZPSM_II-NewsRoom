@@ -5,6 +5,9 @@ import {Client} from "pg";
 import {config} from "./config";
 import NewsController from "./controllers/news.controller";
 import NewsService from "./modules/services/news.service";
+import UserController from "./interfaces/user.controller";
+import UserService from "./modules/services/user.service";
+import TokenService from "./modules/services/token.service";
 
 const client = new Client({
     user: config.dbUser,
@@ -16,8 +19,11 @@ const client = new Client({
 
 function createControllers(): Controller[] {
     const newsService = new NewsService(client);
+    const userService = new UserService(client);
+    const tokenService = new TokenService(client);
 
     return [
+        new UserController(userService, tokenService),
         new NewsController(newsService),
         new IndexController(),
     ]

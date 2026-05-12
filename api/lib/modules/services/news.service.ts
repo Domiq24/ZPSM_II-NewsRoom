@@ -38,6 +38,18 @@ class NewsService {
         }
     }
 
+    public async getNewsRating(newsID: number) {
+        try {
+            const data = await this.client.query(
+                `SELECT AVG(value) AS value FROM news_room.ratings WHERE news_id=${newsID}`
+            );
+            return data.rows[0]
+        } catch (error) {
+            console.error("Error while getting news rating: ", error);
+            throw new Error("Error while getting news rating");
+        }
+    }
+
     public async getUserNewsRating(userID: number, newsID: number) {
         try {
             const data = await this.client.query(
@@ -46,8 +58,8 @@ class NewsService {
             );
             return data.rows[0]
         } catch (error) {
-            console.error("Error while getting news rating: ", error);
-            throw new Error("Error while getting news rating");
+            console.error("Error while getting user's news rating: ", error);
+            throw new Error("Error while getting user's news rating");
         }
     }
 
