@@ -5,7 +5,7 @@ import {Client} from "pg";
 import {config} from "./config";
 import NewsController from "./controllers/news.controller";
 import NewsService from "./modules/services/news.service";
-import UserController from "./interfaces/user.controller";
+import UserController from "./controllers/user.controller";
 import UserService from "./modules/services/user.service";
 import TokenService from "./modules/services/token.service";
 

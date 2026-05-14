@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import News from "@/interfaces/news.interface";
 import axios from "axios";
 import Preferences from "@/interfaces/preferences.interface";
+import * as SecureStore from 'expo-secure-store';
 
 export default function SavedNewsScreen() {
     const [savedNews, setSavedNews] = useState<News[]>([])
@@ -16,12 +17,17 @@ export default function SavedNewsScreen() {
         dateFrom: null,
         dateTo: null
     })
+    const [token, setToken] = useState({
+        tokenID: null,
+        value: ""
+    })
 
     const fetchSavedNews = async () => {
-        await axios.get("http://192.168.0.123:3100/news/saved/2", {
+        await axios.get("http://172.22.23.12:3100/news/saved", {
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': ' application/json'
+                'Content-Type': ' application/json',
+                'x-access-token': 'Bearer ' + token.value
             }
         })
         .then(res => {
@@ -33,12 +39,17 @@ export default function SavedNewsScreen() {
                 }
             }));
         })
-        .catch(error => {
-            console.error(error.message)
-        })
+        .catch(e => console.error(e.response.data))
+    }
+
+    const getToken = () => {
+        const json = SecureStore.getItem("token");
+        if(json)
+            setToken(JSON.parse(json));
     }
 
     useEffect(() => {
+        getToken();
         fetchSavedNews();
     }, []);
 

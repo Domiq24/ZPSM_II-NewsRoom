@@ -1,6 +1,7 @@
 import {IUser} from "../models/user.model";
 import {Client, QueryResult} from "pg";
 import * as bcrypt from "bcryptjs";
+import {IPrefs} from "../models/prefs.model";
 
 class UserService {
     constructor(private client: Client) {
@@ -40,6 +41,46 @@ class UserService {
         }
     }
 
+    public async getPrefs(userID: number): Promise<IPrefs> {
+        try {
+            const prefs = await this.client.query(
+                `SELECT * FROM news_room.preferences WHERE user_id=${userID}`
+            )
+
+            return {
+                search: prefs.rows[0].search != null ? prefs.rows[0].search : "",
+                sort: prefs.rows[0].sort,
+                tags: prefs.rows[0].tags != null ? prefs.rows[0].tags : [],
+                dateFrom: prefs.rows[0].date_from,
+                dateTo: prefs.rows[0].date_to,
+                ratingFrom: prefs.rows[0].rating_from,
+                ratingTo: prefs.rows[0].rating_to
+            }
+        } catch (e) {
+            console.error("Error while getting user preferences: ", e);
+            throw new Error("Error while getting user preferences");
+        }
+    }
+
+    public async updatePrefs(userID: number, prefs: IPrefs): Promise<boolean> {
+        try {
+            const result = await this.client.query(
+                "UPDATE news_room.preferences " +
+                `SET ${prefs.search != "" ? `search='${prefs.search}'` : "search=NULL"}, ` +
+                `${prefs.tags.length > 0 ? `tags='{${prefs.tags.map(tag => {return `"${tag}" `})}}'` : "tags=NULL"}, ` +
+                `rating_from=${prefs.ratingFrom}, ` +
+                `rating_to=${prefs.ratingTo}, ` +
+                `${prefs.dateFrom != null ? `date_from='${this.formatDate(prefs.dateFrom)}'` : "date_from=NULL"}, ` +
+                `${prefs.dateTo != null ? `date_to='${this.formatDate(prefs.dateTo)}'` : "date_to=NULL"} ` +
+                `WHERE user_id=${userID}`
+            );
+            return result.rowCount > 0;
+        } catch (e) {
+            console.error("Error while updating user preferences: ", e);
+            throw new Error("Error while updating user preferences");
+        }
+    }
+
     public async deleteUser(userID: number): Promise<boolean> {
         const result = await this.client.query(
             `DELETE FROM news_room.users WHERE user_id=${userID}`
@@ -53,7 +94,7 @@ class UserService {
             `SELECT * FROM news_room.users WHERE name='${login}' OR email='${login}'`
         );
 
-        if(bcrypt.compare(password, user.rows[0].password))
+        if(user.rowCount > 0 && await bcrypt.compare(password, user.rows[0].password))
         {
             return {
                 userID: user.rows[0].user_id,
@@ -69,6 +110,10 @@ class UserService {
     public async hashPassword(rawPassword: string): Promise<string> {
         const saltRounds = 10;
         return bcrypt.hash(rawPassword, saltRounds);
+    }
+
+    private formatDate(date: Date) {
+        return date.toISOString().replace('T', ' ').replace('Z', '')
     }
 }
 

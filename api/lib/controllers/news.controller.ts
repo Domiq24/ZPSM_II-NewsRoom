@@ -15,8 +15,7 @@ class NewsController implements Controller {
     private initializeRoutes() {
         this.router.get(this.path, this.returnAllNews);
         this.router.get(`${this.path}/saved`, auth, this.returnSavedNews);
-        this.router.get(`${this.path}/rating/:newsID`, auth, this.returnNewsRating)
-        this.router.get(`${this.path}/rating/:newsID/:userID`, auth, this.returnUserNewsRating);
+        this.router.get(`${this.path}/rating/:newsID`, auth, this.returnUserNewsRating);
         this.router.post(`${this.path}/saved/:newsID`, auth, this.saveNews);
         this.router.post(`${this.path}/rating/:newsID`, auth, this.rateNews);
         this.router.delete(`${this.path}/saved/:newsID`, auth, this.removeSavedNews);
@@ -56,17 +55,14 @@ class NewsController implements Controller {
             else
                 return response.status(200).send({value: 0});
         } catch (e) {
-            console.log("Error while requesting news rating", e);
+            console.log("Error while requesting news rating: ", e);
             return response.status(500).send(e.message)
         }
     }
 
     private returnUserNewsRating = async (request: Request, response: Response) => {
-        const { userID, newsID } = request.params;
+        const { newsID } = request.params;
         const { token } = request.body;
-
-        if(token.userID != Number(userID))
-            return response.status(401).send("Access denied.")
 
         try {
             const rating = await this.newsService.getUserNewsRating(token.userID, Number(newsID));
@@ -75,7 +71,7 @@ class NewsController implements Controller {
             else
                 return response.status(200).send({value: 0});
         } catch (e) {
-            console.log("Error while requesting user's news rating", e);
+            console.log("Error while requesting user's news rating: ", e);
             return response.status(500).send(e.message)
         }
     }

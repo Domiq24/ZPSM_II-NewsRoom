@@ -1,7 +1,6 @@
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
-import { Divider } from "@/components/ui/divider";
 import {Button, ButtonText} from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import News from "@/interfaces/news.interface";
@@ -13,6 +12,7 @@ import RateDialog from "@/components/ui/RateDialog";
 import { StyleSheet } from "react-native";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import * as Linking from 'expo-linking';
+import * as SecureStore from 'expo-secure-store'
 
 export default function DetailsScreen() {
     const [rateOpen, setRateOpen] = useState(false);
@@ -27,13 +27,18 @@ export default function DetailsScreen() {
         title: "",
         topics: []
     });
+    const [token, setToken] = useState({
+        tokenID: null,
+        value: ""
+    });
     const params = useLocalSearchParams();
 
     const checkIfNewsSaved = async (item: News) => {
-        await axios.get("http://192.168.0.123:3100/news/saved/2", {
+        await axios.get("http://172.22.23.12:3100/news/saved", {
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': ' application/json'
+                'Content-Type': ' application/json',
+                'x-access-token': 'Bearer ' + token.value
             }
         })
         .then(res => {
@@ -43,45 +48,62 @@ export default function DetailsScreen() {
                 }
             }
         })
-        .catch(error => console.log(error));
+        .catch(e => console.log(e.response.data));
     }
 
     const saveNews = async () => {
-        await axios.post("http://192.168.0.123:3100/news/saved/2", {
-            newsID: newsItem.newsID
-        }, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': ' application/json'
+        await axios.post(`http://172.22.23.12:3100/news/saved/${newsItem.newsID}`,
+            {},
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': ' application/json',
+                    'x-access-token': 'Bearer ' + token.value
+                }
             }
-        })
+        )
         .then(() => setIsSaved(true))
-        .catch(error => console.error(error));
+        .catch(e => console.error(e.response.data));
     }
 
     const forgetNews = async () => {
-        await axios.delete(`http://192.168.0.123:3100/news/saved/2/${newsItem.newsID}`, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': ' application/json'
+        await axios.delete(`http://172.22.23.12:3100/news/saved/${newsItem.newsID}`,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': ' application/json',
+                    'x-access-token': 'Bearer ' + token.value
+                }
             }
-        })
+        )
         .then(() => setIsSaved(false))
-        .catch(error => console.error(error));
+        .catch(e => console.error(e.response.data));
     }
 
     const formatDate = (date: Date) => {
         return `${date.getDate()}.${(date.getMonth()+1).toString().padStart(2, "0")}.${date.getFullYear()}`;
     }
 
+    const getToken = () => {
+        const json = SecureStore.getItem("token");
+        if(json)
+        {
+            const token = JSON.parse(json);
+            setToken(token);
+            console.log(token);
+        }
+    }
+
     useEffect(() => {
+
         const raw = JSON.parse(params.newsItem as string);
         const tmpItem: News = {
             ...raw,
             date: new Date(raw.date),
             topics: [...raw.topics]
         }
-        setNewsItem(tmpItem)
+        setNewsItem(tmpItem);
+        getToken();
         checkIfNewsSaved(tmpItem);
     }, []);
 
@@ -129,7 +151,7 @@ export default function DetailsScreen() {
                     </Button>
                 </Box>
             </Box>
-            <RateDialog id={newsItem.newsID} open={rateOpen} setOpen={setRateOpen} />
+            <RateDialog id={newsItem.newsID} token={token.value} open={rateOpen} setOpen={setRateOpen} />
         </>
 
     );

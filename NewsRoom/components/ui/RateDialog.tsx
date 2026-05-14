@@ -13,14 +13,15 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import { StyleSheet } from "react-native";
 
-export default function RateDialog({id, open, setOpen}: {id: number, open: boolean, setOpen: (open: boolean) => void}) {
+export default function RateDialog({id, token, open, setOpen}: {id: number, token: string, open: boolean, setOpen: (open: boolean) => void}) {
     const [rating, setRating] = useState(0);
 
     const fetchNewsRating = async () => {
-        await axios.get(`http://192.168.0.123:3100/news/rating/2/${id}`, {
+        await axios.get(`http://172.22.23.12:3100/news/rating/${id}`, {
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': ' application/json'
+                'Content-Type': ' application/json',
+                'x-access-token': 'Bearer ' + token
             }
         })
         .then(res => setRating(res.data.value))
@@ -30,15 +31,18 @@ export default function RateDialog({id, open, setOpen}: {id: number, open: boole
     const rateNews = async () => {
         if(rating == 0)
             return
-        await axios.post("http://192.168.0.123:3100/news/rating/2", {
-            newsID: id,
-            value: rating
-        }, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': ' application/json'
+        await axios.post("http://172.22.23.12:3100/news/rating",
+            {
+                newsID: id,
+                value: rating
+            }, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': ' application/json',
+                    'x-access-token': 'Bearer ' + token
+                }
             }
-        })
+        )
         .then(() => setOpen(false))
         .catch(error => console.error(error));
     }

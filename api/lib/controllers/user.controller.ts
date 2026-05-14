@@ -13,10 +13,26 @@ class UserController implements Controller {
     }
 
     private initializeRoutes() {
+        this.router.get(`${this.path}/pref`, auth, this.getUserPrefs)
         this.router.post(this.path, this.addUser)
         this.router.post(`${this.path}/auth`, this.authUser)
+        this.router.post(`${this.path}/pref`, auth, this.savePrefs)
+        this.router.delete(this.path, auth, this.deleteUser)
         this.router.delete(`${this.path}/log-out`, auth, this.logOut)
-        this.router.delete(`${this.path}/:userID`, auth, this.deleteUser)
+    }
+
+    private getUserPrefs = async (request: Request, response: Response) => {
+        const { token } = request.body;
+
+        try {
+            const prefs = await this.userService.getPrefs(token.userID);
+            if(prefs)
+                return response.status(200).send(prefs);
+            return response.status(400).send("Incorrect prefs data.");
+        } catch (e) {
+            console.error("Error while getting user preferences: ", e);
+            return response.status(500).send(e.message);
+        }
     }
 
     private authUser = async (request: Request, response: Response) => {
@@ -24,7 +40,6 @@ class UserController implements Controller {
 
         try {
             const user = await this.userService.authenticate(login, password);
-            console.log(user);
             if(user) {
                 const token = await this.tokenService.create(user)
                 if(token)
@@ -33,6 +48,7 @@ class UserController implements Controller {
             }
             return response.status(400).send("Wrong login or password.")
         } catch (e) {
+            console.error("Error while authenticating user: ", e);
             return response.status(500).send(e.message)
         }
     }
@@ -46,16 +62,27 @@ class UserController implements Controller {
                 return response.status(200).send("User created.");
             return response.status(400).send("Incorrect user data.");
         } catch (e) {
+            console.error("Error while adding user: ", e);
+            return response.status(500).send(e.message);
+        }
+    }
+
+    private savePrefs = async (request: Request, response: Response) => {
+        const { token, prefs } = request.body;
+
+        try {
+            const result = await this.userService.updatePrefs(token.userID, prefs);
+            if(result)
+                return response.status(200).send("User preferences saved.");
+            return response.status(400).send("Incorrect preferences data")
+        } catch (e) {
+            console.error("Error while saving user preferences: ", e);
             return response.status(500).send(e.message);
         }
     }
 
     private deleteUser = async (request: Request, response: Response) => {
-        const { userID } = request.params;
         const { token, password } = request.body;
-
-        if(token.userID != Number(userID))
-            return response.status(401).send("Access denied.");
 
         try {
             const result = await this.userService.authenticate(token.name, password);
@@ -67,6 +94,7 @@ class UserController implements Controller {
             }
             return response.status(400).send("Wrong password.");
         } catch (e) {
+            console.error("Error while deleting user: ", e);
             return response.status(500).send(e.message);
         }
     }
@@ -80,6 +108,7 @@ class UserController implements Controller {
                 return response.status(200).send("User logged out");
             return response.status(400).send("Wrong token id");
         } catch (e) {
+            console.error("Error while logging out: ", e);
             return response.status(500).send(e.message);
         }
     }

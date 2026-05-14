@@ -1,7 +1,7 @@
 import { Box } from '@/components/ui/box'
-import {Button, ButtonIcon, ButtonText} from "@/components/ui/button";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Picker } from "@react-native-picker/picker";
-import {ChevronDownIcon, MenuIcon, SearchIcon} from '@/components/ui/icon';
+import { MenuIcon, SearchIcon } from '@/components/ui/icon';
 import { Input, InputField, InputSlot, InputIcon } from "@/components/ui/input";
 import { StyleSheet } from "react-native";
 import Preferences from "@/interfaces/preferences.interface";
