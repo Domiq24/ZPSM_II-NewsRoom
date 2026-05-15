@@ -18,7 +18,7 @@ class UserController implements Controller {
         this.router.post(`${this.path}/auth`, this.authUser)
         this.router.post(`${this.path}/pref`, auth, this.savePrefs)
         this.router.delete(this.path, auth, this.deleteUser)
-        this.router.delete(`${this.path}/log-out`, auth, this.logOut)
+        this.router.delete(`${this.path}/log-out/:tokenID`, auth, this.logOut)
     }
 
     private getUserPrefs = async (request: Request, response: Response) => {
@@ -69,6 +69,7 @@ class UserController implements Controller {
 
     private savePrefs = async (request: Request, response: Response) => {
         const { token, prefs } = request.body;
+        console.log(prefs);
 
         try {
             const result = await this.userService.updatePrefs(token.userID, prefs);
@@ -82,17 +83,12 @@ class UserController implements Controller {
     }
 
     private deleteUser = async (request: Request, response: Response) => {
-        const { token, password } = request.body;
+        const { token } = request.body;
 
         try {
-            const result = await this.userService.authenticate(token.name, password);
-            if(result)
-            {
-                if(await this.userService.deleteUser(token.userID))
-                    return response.status(200).send("User deleted.");
-                return response.status(500).send("Could not delete user.");
-            }
-            return response.status(400).send("Wrong password.");
+            if(await this.userService.deleteUser(token.userID))
+                return response.status(200).send("User deleted.");
+            return response.status(500).send("Could not delete user.");
         } catch (e) {
             console.error("Error while deleting user: ", e);
             return response.status(500).send(e.message);
@@ -100,10 +96,10 @@ class UserController implements Controller {
     }
 
     private logOut = async (request: Request, response: Response) => {
-        const { tokenID } = request.body;
+        const { tokenID } = request.params;
 
         try {
-            const result = await this.tokenService.remove(tokenID);
+            const result = await this.tokenService.remove(Number(tokenID));
             if(result)
                 return response.status(200).send("User logged out");
             return response.status(400).send("Wrong token id");

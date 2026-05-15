@@ -16,15 +16,33 @@ import { StyleSheet } from "react-native";
 import {useEffect, useState} from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {ChevronDownIcon} from "@/components/ui/icon";
+import {
+    ButtonBox,
+    DialogBackdrop,
+    DialogContent, FillButton, FillButtonText, FiltersBody,
+    Label, OutlineButton, OutlineButtonRed, OutlineButtonText, OutlineButtonTextRed, ParallelButton, ParallelInput,
+    ParallelInputsBox,
+    TagInputField
+} from "@/components/ui/StyledComponents";
 
 export default function FiltersDialog({open, setOpen, pref, setPref, minDate, maxDate}: {open: boolean, setOpen: (open: boolean) => void, pref: Preferences, setPref: (pref: Preferences) => void, minDate: Date, maxDate: Date}) {
     const [filterOpt, setFilterOpt] = useState(pref);
     const [openDateFrom, setOpenDateFrom] = useState(false);
     const [openDateTo, setOpenDateTo] = useState(false);
+    const [error, setError] = useState({message: "", show: false})
 
     const SavePreferences = () => {
-        setPref(filterOpt);
-        setOpen(false);
+        setError({message: "", show: false});
+        if(filterOpt.ratingFrom < 0)
+            setError({message: "Rating range must start from at least 0", show: true});
+        else if(filterOpt.ratingFrom >= filterOpt.ratingTo)
+            setError({message: "Rating range start must be smaller then range end", show: true});
+        else if(filterOpt.ratingTo > 5)
+            setError({message: "Rating range must end with at most 5", show: true});
+        else {
+            setPref(filterOpt);
+            setOpen(false);
+        }
     }
 
     const clearFilters = () => {
@@ -39,7 +57,7 @@ export default function FiltersDialog({open, setOpen, pref, setPref, minDate, ma
         }
         setFilterOpt(cleanFilter);
         setPref(cleanFilter);
-        setOpen(false);
+        setError({message: "", show: false});
     }
 
     const handleChange = (e: any, name: string) => {
@@ -55,28 +73,26 @@ export default function FiltersDialog({open, setOpen, pref, setPref, minDate, ma
 
     return (
         <AlertDialog useRNModal={true} isOpen={open} onClose={() => setOpen(false)} >
-            <AlertDialogBackdrop style={styles.backdrop} />
-            <AlertDialogContent style={styles.container}>
+            <DialogBackdrop />
+            <DialogContent style={{top: "25%"}}>
                 <AlertDialogHeader>
                     <Heading size="3xl" >Filters</Heading>
                 </AlertDialogHeader>
-                <AlertDialogBody>
+                <FiltersBody>
                     <Input
                         variant="outline"
                         size="md"
                     >
-                        <InputField
-                            style={styles.tags}
+                        <TagInputField
                             placeholder="Tags"
                             value={filterOpt.tags.join(' ')}
                             onChangeText={e => handleChange(e.split(' '), "tags")}
                         />
                     </Input>
-                    <Text style={styles.label}>Rating</Text>
-                    <Box style={styles.input_section}>
-                        <Input size="sm">
-                            <InputField
-                                style={styles.rate_input}
+                    <Label>Rating</Label>
+                    <ParallelInputsBox>
+                        <Input size="sm" style={{marginRight: 8}}>
+                            <ParallelInput
                                 inputMode="numeric"
                                 placeholder="From"
                                 value={filterOpt.ratingFrom.toString()}
@@ -85,40 +101,40 @@ export default function FiltersDialog({open, setOpen, pref, setPref, minDate, ma
                         </Input>
                         <Text style={{fontSize: 18, marginRight: 8}}>-</Text>
                         <Input size="sm">
-                            <InputField
-                                style={styles.rate_input}
+                            <ParallelInput
                                 inputMode="numeric"
                                 placeholder="To"
                                 value={filterOpt.ratingTo.toString()}
                                 onChangeText={e => handleChange(Number(e), "ratingTo")}
                             />
                         </Input>
-                    </Box>
-                    <Text style={styles.label}>Date</Text>
-                    <Box style={styles.input_section}>
-                        <Button style={styles.date_button} onPress={() => setOpenDateFrom(true)}>
+                    </ParallelInputsBox>
+                    <Label>Date</Label>
+                    <ParallelInputsBox>
+                        <ParallelButton style={{marginRight: 8}} onPress={() => setOpenDateFrom(true)}>
                             <ButtonText style={{fontSize: 18}}>{filterOpt.dateFrom === null ? "From" : formatDate(filterOpt.dateFrom)}</ButtonText>
                             <ButtonIcon as={ChevronDownIcon} width={14} height={14} fill="#00000000" />
-                        </Button>
+                        </ParallelButton>
                         <Text style={{fontSize: 18, marginRight: 8}}>-</Text>
-                        <Button style={styles.date_button} onPress={() => setOpenDateTo(true)}>
+                        <ParallelButton onPress={() => setOpenDateTo(true)}>
                             <ButtonText style={{fontSize: 18}}>{filterOpt.dateTo === null ? "To" : formatDate(filterOpt.dateTo)}</ButtonText>
                             <ButtonIcon  as={ChevronDownIcon} width={14} height={14} fill="#00000000" />
-                        </Button>
-                    </Box>
-                </AlertDialogBody>
-                <AlertDialogFooter style={styles.footer}>
-                    <Button style={styles.filter_button} onPress={SavePreferences}>
-                        <ButtonText style={{...styles.button_text, color: "white"}}>Filter</ButtonText>
-                    </Button>
-                    <Button style={styles.cancel_button} onPress={() => setOpen(false)}>
-                        <ButtonText style={{...styles.button_text, color: "#2080FF"}}>Cancel</ButtonText>
-                    </Button>
-                    <Button style={styles.clear_button} onPress={() => clearFilters()}>
-                        <ButtonText style={{...styles.button_text, color: "#D02020"}}>Clear</ButtonText>
-                    </Button>
-                </AlertDialogFooter>
-            </AlertDialogContent>
+                        </ParallelButton>
+                    </ParallelInputsBox>
+                    {error.show && <Text styel={{color: "red", marginTop: 16}}>{error.message}</Text>}
+                </FiltersBody>
+                <ButtonBox style={{marginTop: 24}}>
+                    <FillButton onPress={SavePreferences}>
+                        <FillButtonText>Filter</FillButtonText>
+                    </FillButton>
+                    <OutlineButton onPress={() => clearFilters()}>
+                        <OutlineButtonText>Clear</OutlineButtonText>
+                    </OutlineButton>
+                    <OutlineButtonRed onPress={() => setOpen(false)}>
+                        <OutlineButtonTextRed>Cancel</OutlineButtonTextRed>
+                    </OutlineButtonRed>
+                </ButtonBox>
+            </DialogContent>
             {openDateFrom && <DateTimePicker
                 value={pref.dateFrom === null ? minDate : pref.dateFrom}
                 minimumDate={minDate}
@@ -142,43 +158,8 @@ export default function FiltersDialog({open, setOpen, pref, setPref, minDate, ma
 }
 
 const styles = StyleSheet.create({
-    backdrop: {
-        backgroundColor: "#000000",
-        opacity: 0.4,
-        height: "100%",
-        width: "100%"
-    },
-    container: {
-        position: "absolute",
-        backgroundColor: "#FFFFFF",
-        alignSelf: "center",
-        width: "85%",
-        padding: 16,
-        top: "25%"
-    },
-    tags: {
-        fontSize: 16,
-        borderColor: "#505050",
-        borderWidth: 2,
-        borderRadius: 16,
-        paddingHorizontal: 8,
-        marginTop: 16
-    },
-    label: {
-        marginTop: 16,
-        fontSize: 22,
-        fontWeight: "bold"
-    },
-    input_section: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
     rate_input: {
-        fontSize: 18,
-        borderColor: "#505050",
-        borderBottomWidth: 3,
-        marginVertical: 8,
-        marginRight: 8
+
     },
     footer: {
         flexDirection: "row",

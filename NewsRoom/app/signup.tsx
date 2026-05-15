@@ -45,7 +45,7 @@ export default function SignUpScreen() {
         else if(rPassword != account.password)
             setError({message: "Repeated password must match the original", show: true});
         else {
-            await axios.post("http://172.22.23.12:3100/user",
+            await axios.post("http://172.22.23.115:3100/user",
                 {
                     user: {
                         ...account,
@@ -111,7 +111,7 @@ export default function SignUpScreen() {
                     </InputSlot>
                 </StyledInput>
                 {error.show && <Text style={{color: "red"}}>{error.message}</Text>}
-                <ButtonBox>
+                <ButtonBox style={{marginTop: 16}}>
                     <FillButton
                         onPress={handleSignUp}
                     >

@@ -23,7 +23,8 @@ export default function LoginScreen() {
         else if(password === "")
             setError({message: "Password required", show: true});
         else {
-            await axios.post("http://172.22.23.12:3100/user/auth",
+            console.log("Logging in")
+            await axios.post("http://172.22.23.115:3100/user/auth",
                 {
                     login: login,
                     password: password
@@ -89,7 +90,7 @@ export default function LoginScreen() {
                     </InputSlot>
                 </StyledInput>
                 {error.show && <Text style={{color: "red"}}>{error.message}</Text>}
-                <ButtonBox>
+                <ButtonBox style={{marginTop: 16}}>
                     <FillButton
                         onPress={handleLogIn}
                     >

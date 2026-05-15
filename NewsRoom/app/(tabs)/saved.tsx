@@ -23,7 +23,7 @@ export default function SavedNewsScreen() {
     })
 
     const fetchSavedNews = async () => {
-        await axios.get("http://172.22.23.12:3100/news/saved", {
+        await axios.get("http://172.22.23.115:3100/news/saved", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json',
@@ -31,7 +31,7 @@ export default function SavedNewsScreen() {
             }
         })
         .then(res => {
-            setSavedNews(res.data.map(newsItem => {
+            setSavedNews(res.data.map((newsItem: any) => {
                 return {
                     ...newsItem,
                     date: new Date(newsItem.date),
@@ -42,16 +42,20 @@ export default function SavedNewsScreen() {
         .catch(e => console.error(e.response.data))
     }
 
-    const getToken = () => {
-        const json = SecureStore.getItem("token");
+    const getToken = async () => {
+        const json = await SecureStore.getItemAsync("token");
         if(json)
             setToken(JSON.parse(json));
     }
 
     useEffect(() => {
         getToken();
-        fetchSavedNews();
     }, []);
+
+    useEffect(() => {
+        if(token.value != "")
+            fetchSavedNews();
+    }, [token]);
 
     return (
         <Box>

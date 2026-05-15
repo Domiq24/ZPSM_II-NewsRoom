@@ -1,13 +1,13 @@
 import HomeToolbar from "@/components/ui/HomeToolbar";
 import NewsList from "@/components/ui/NewsList";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import axios from "axios";
 import News from "@/interfaces/news.interface";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import Preferences from "@/interfaces/preferences.interface";
 import FiltersDialog from "@/components/ui/FiltersDialog";
 import * as SecureStore from 'expo-secure-store';
-import {useNavigation} from "expo-router";
+import {useFocusEffect} from "expo-router";
 
 export default function HomeScreen() {
     const [news, setNews] = useState<News[]>([]);
@@ -27,10 +27,9 @@ export default function HomeScreen() {
         tokenID: null,
         value: ""
     });
-    const navigation = useNavigation();
 
     const fetchNews = async () => {
-        await axios.get("http://172.22.23.12:3100/news", {
+        await axios.get("http://172.22.23.115:3100/news", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json',
@@ -50,7 +49,7 @@ export default function HomeScreen() {
     }
 
     const fetchPrefs = async () => {
-        axios.get("http://172.22.23.12:3100/user/pref",
+        axios.get("http://172.22.23.115:3100/user/pref",
             {
                 headers: {
                     'Accept': 'application/json',
@@ -67,7 +66,7 @@ export default function HomeScreen() {
     }
 
     const savePrefs = async () => {
-        axios.post("http://172.22.23.12:3100/user/pref",
+        axios.post("http://172.22.23.115:3100/user/pref",
             {
                 prefs: prefs
             },
@@ -92,16 +91,17 @@ export default function HomeScreen() {
         }
     }
 
-    const getToken = () => {
-        const json = SecureStore.getItem("token");
+    const getToken = async () => {
+        const json = await SecureStore.getItemAsync("token");
         if(json)
             setToken(JSON.parse(json));
     }
 
     useEffect(() => {
-        getToken()
-        getPrefs();
-        fetchNews();
+        getToken().then(() => {
+            getPrefs();
+            fetchNews();
+        })
     }, []);
 
     useEffect(() => {
@@ -111,13 +111,12 @@ export default function HomeScreen() {
         }
     }, [news]);
 
-    useEffect(() => {
-        const unsub = navigation.addListener('beforeRemove', (e) => {
-            savePrefs();
-        })
-
-        return () => unsub();
-    }, [navigation]);
+    useFocusEffect(useCallback(() => {
+        return () => {
+            if(token.value != "")
+                savePrefs()
+        }
+    }, [token, prefs]))
 
     return (
         <SafeAreaProvider>

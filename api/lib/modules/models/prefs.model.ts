@@ -4,6 +4,6 @@ export interface IPrefs {
     tags: string[],
     ratingFrom: number,
     ratingTo: number,
-    dateFrom?: Date,
-    dateTo?: Date
+    dateFrom?: Date | string,
+    dateTo?: Date | string
 }

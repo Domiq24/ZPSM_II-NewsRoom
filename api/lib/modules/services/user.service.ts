@@ -63,16 +63,20 @@ class UserService {
     }
 
     public async updatePrefs(userID: number, prefs: IPrefs): Promise<boolean> {
+        console.log("Saving prefs in service")
         try {
-            const result = await this.client.query(
-                "UPDATE news_room.preferences " +
+            const query = "UPDATE news_room.preferences " +
                 `SET ${prefs.search != "" ? `search='${prefs.search}'` : "search=NULL"}, ` +
+                `sort='${prefs.sort}', ` +
                 `${prefs.tags.length > 0 ? `tags='{${prefs.tags.map(tag => {return `"${tag}" `})}}'` : "tags=NULL"}, ` +
                 `rating_from=${prefs.ratingFrom}, ` +
                 `rating_to=${prefs.ratingTo}, ` +
-                `${prefs.dateFrom != null ? `date_from='${this.formatDate(prefs.dateFrom)}'` : "date_from=NULL"}, ` +
-                `${prefs.dateTo != null ? `date_to='${this.formatDate(prefs.dateTo)}'` : "date_to=NULL"} ` +
-                `WHERE user_id=${userID}`
+                `${prefs.dateFrom != null ? `date_from='${this.formatDate(prefs.dateFrom as string)}'` : "date_from=NULL"}, ` +
+                `${prefs.dateTo != null ? `date_to='${this.formatDate(prefs.dateTo as string)}'` : "date_to=NULL"} ` +
+                `WHERE user_id=${userID}`;
+            console.log(query);
+            const result = await this.client.query(
+                query
             );
             return result.rowCount > 0;
         } catch (e) {
@@ -112,8 +116,8 @@ class UserService {
         return bcrypt.hash(rawPassword, saltRounds);
     }
 
-    private formatDate(date: Date) {
-        return date.toISOString().replace('T', ' ').replace('Z', '')
+    private formatDate(date: string) {
+        return date.replace('T', ' ').replace('Z', '')
     }
 }
 

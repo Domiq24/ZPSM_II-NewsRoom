@@ -12,12 +12,20 @@ import StarRating from "react-native-star-rating-widget";
 import axios from "axios";
 import {useEffect, useState} from "react";
 import { StyleSheet } from "react-native";
+import {
+    ButtonBox,
+    DialogBackdrop,
+    DialogContent,
+    FillButton,
+    FillButtonText,
+    OutlineButton, OutlineButtonText
+} from "@/components/ui/StyledComponents";
 
 export default function RateDialog({id, token, open, setOpen}: {id: number, token: string, open: boolean, setOpen: (open: boolean) => void}) {
     const [rating, setRating] = useState(0);
 
     const fetchNewsRating = async () => {
-        await axios.get(`http://172.22.23.12:3100/news/rating/${id}`, {
+        await axios.get(`http://172.22.23.115:3100/news/rating/${id}`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json',
@@ -25,15 +33,14 @@ export default function RateDialog({id, token, open, setOpen}: {id: number, toke
             }
         })
         .then(res => setRating(res.data.value))
-        .catch(error => console.error(error.response));
+        .catch(e => console.error(e.response.data));
     }
 
     const rateNews = async () => {
         if(rating == 0)
             return
-        await axios.post("http://172.22.23.12:3100/news/rating",
+        await axios.post(`http://172.22.23.115:3100/news/rating/${id}`,
             {
-                newsID: id,
                 value: rating
             }, {
                 headers: {
@@ -44,17 +51,18 @@ export default function RateDialog({id, token, open, setOpen}: {id: number, toke
             }
         )
         .then(() => setOpen(false))
-        .catch(error => console.error(error));
+        .catch(e => console.error(e.response.data));
     }
 
     useEffect(() => {
-        fetchNewsRating();
-    }, [id]);
+        if(token != "")
+            fetchNewsRating();
+    }, [id, token]);
 
     return (
         <AlertDialog isOpen={open} onClose={() => setOpen(false)} useRNModal={true}  >
-            <AlertDialogBackdrop style={styles.backdrop} />
-            <AlertDialogContent style={styles.container}>
+            <DialogBackdrop />
+            <DialogContent style={{top: "40%"}}>
                 <AlertDialogHeader>
                     <Heading size="3xl" style={{marginLeft: 8}}>Rate</Heading>
                 </AlertDialogHeader>
@@ -68,57 +76,15 @@ export default function RateDialog({id, token, open, setOpen}: {id: number, toke
                         emptyColor="#909090"
                     />
                 </AlertDialogBody>
-                <AlertDialogFooter style={styles.buttons_box}>
-                    <Button onPress={() => rateNews()} style={styles.button_rate}>
-                        <ButtonText style={{...styles.button_text, color: "white"}}>Rate</ButtonText>
-                    </Button>
-                    <Button onPress={() => setOpen(false)} style={styles.button_cancel}>
-                        <ButtonText style={{...styles.button_text, color: "#2080FF"}} >Cancel</ButtonText>
-                    </Button>
-                </AlertDialogFooter>
-            </AlertDialogContent>
+                <ButtonBox style={{paddingTop: 24}}>
+                    <FillButton onPress={() => rateNews()}>
+                        <FillButtonText>Rate</FillButtonText>
+                    </FillButton>
+                    <OutlineButton onPress={() => setOpen(false)}>
+                        <OutlineButtonText>Cancel</OutlineButtonText>
+                    </OutlineButton>
+                </ButtonBox>
+            </DialogContent>
         </AlertDialog>
     )
 }
-
-const styles = StyleSheet.create({
-    backdrop: {
-        backgroundColor: "#000000",
-        opacity: 0.4,
-        height: "100%",
-        width: "100%"
-    },
-    container: {
-        position: "absolute",
-        backgroundColor: "#FFFFFF",
-        alignSelf: "center",
-        width: "85%",
-        padding: 16,
-        top: "40%"
-    },
-    buttons_box: {
-        flexDirection: "row",
-        paddingTop: 24,
-        paddingBottom: 8,
-        paddingHorizontal: 16,
-        justifyContent: "space-between"
-    },
-    button_rate: {
-        padding: 12,
-        backgroundColor: "#2080FF",
-        borderRadius: 8,
-        width: 96
-    },
-    button_cancel: {
-        padding: 12,
-        borderColor: "#2080FF",
-        borderWidth: 3,
-        borderRadius: 8,
-        width: 96
-    },
-    button_text: {
-        fontSize: 16,
-        textAlign: "center",
-        fontWeight: "bold"
-    }
-});

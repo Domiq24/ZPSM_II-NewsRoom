@@ -13,6 +13,14 @@ import { StyleSheet } from "react-native";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import * as Linking from 'expo-linking';
 import * as SecureStore from 'expo-secure-store'
+import {
+    ButtonBox,
+    FillButton,
+    FillButtonText,
+    NewsDetailsInfo,
+    OutlineButton,
+    OutlineButtonText
+} from "@/components/ui/StyledComponents";
 
 export default function DetailsScreen() {
     const [rateOpen, setRateOpen] = useState(false);
@@ -34,7 +42,8 @@ export default function DetailsScreen() {
     const params = useLocalSearchParams();
 
     const checkIfNewsSaved = async (item: News) => {
-        await axios.get("http://172.22.23.12:3100/news/saved", {
+        console.log(token);
+        await axios.get("http://172.22.23.115:3100/news/saved", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json',
@@ -52,7 +61,7 @@ export default function DetailsScreen() {
     }
 
     const saveNews = async () => {
-        await axios.post(`http://172.22.23.12:3100/news/saved/${newsItem.newsID}`,
+        await axios.post(`http://172.22.23.115:3100/news/saved/${newsItem.newsID}`,
             {},
             {
                 headers: {
@@ -67,7 +76,7 @@ export default function DetailsScreen() {
     }
 
     const forgetNews = async () => {
-        await axios.delete(`http://172.22.23.12:3100/news/saved/${newsItem.newsID}`,
+        await axios.delete(`http://172.22.23.115:3100/news/saved/${newsItem.newsID}`,
             {
                 headers: {
                     'Accept': 'application/json',
@@ -84,18 +93,15 @@ export default function DetailsScreen() {
         return `${date.getDate()}.${(date.getMonth()+1).toString().padStart(2, "0")}.${date.getFullYear()}`;
     }
 
-    const getToken = () => {
-        const json = SecureStore.getItem("token");
+    const getToken = async () => {
+        const json = await SecureStore.getItemAsync("token");
         if(json)
         {
-            const token = JSON.parse(json);
-            setToken(token);
-            console.log(token);
+            setToken(JSON.parse(json));
         }
     }
 
     useEffect(() => {
-
         const raw = JSON.parse(params.newsItem as string);
         const tmpItem: News = {
             ...raw,
@@ -104,19 +110,23 @@ export default function DetailsScreen() {
         }
         setNewsItem(tmpItem);
         getToken();
-        checkIfNewsSaved(tmpItem);
     }, []);
+
+    useEffect(() => {
+        if(token.value != "" && newsItem.title != "")
+            checkIfNewsSaved(newsItem)
+    }, [token, newsItem]);
 
     return (
         <>
             <Box style={{padding: 16}}>
                 <Heading size="2xl" style={{marginVertical: 0}}>{newsItem.title}</Heading>
-                <Box style={styles.tags}>
+                <Box style={{flexDirection: "row", gap: 6}}>
                     {newsItem.topics.map((topic) => {
                         return (<Text style={{color: "#2080FF"}}>#{topic}</Text>);
                     })}
                 </Box>
-                <HStack style={styles.info}>
+                <NewsDetailsInfo>
                     <Box style={{flex: 2}}>
                         <Text style={{fontSize: 16}}>{newsItem.author}</Text>
                         <Text style={{fontSize: 16}}>{formatDate(newsItem.date)}</Text>
@@ -130,44 +140,38 @@ export default function DetailsScreen() {
                             emptyColor="#909090"
                         />
                         {isSaved ?
-                            <Button style={{...styles.filled_button, ...styles.save_button}} onPress={() => forgetNews()}>
-                                <ButtonText style={{textAlign: "center", color: "white"}}>Saved</ButtonText>
-                            </Button> :
-                            <Button style={{...styles.outline_button, ...styles.save_button}} onPress={() => saveNews()}>
-                                <ButtonText  style={{textAlign: "center", color: "#2080FF"}}>Save</ButtonText>
-                            </Button>
+                            <FillButton style={{paddingVertical: 4, paddingHorizontal: 16, width: "auto"}} onPress={() => forgetNews()}>
+                                <FillButtonText style={{fontSize: 14}}>Saved</FillButtonText>
+                            </FillButton> :
+                            <OutlineButton style={{paddingVertical: 0, paddingHorizontal: 16, width: "auto"}} onPress={() => saveNews()}>
+                                <OutlineButtonText style={{fontSize: 14}}>Save</OutlineButtonText>
+                            </OutlineButton>
                         }
                     </Box>
-                </HStack>
+                </NewsDetailsInfo>
                 <ScrollView style={{marginTop: 16}}>
                     <Text style={{fontSize: 16}}>{newsItem.introduction}</Text>
                 </ScrollView>
-                <Box style={styles.button_box}>
-                    <Button style={{...styles.bottom_buttons, ...styles.filled_button}} onPress={() => Linking.openURL(newsItem.source)}>
-                        <ButtonText style={{...styles.button_text,color: "white"}}>See more</ButtonText>
-                    </Button>
-                    <Button style={{...styles.bottom_buttons, ...styles.outline_button}} onPress={() => setRateOpen(true)}>
-                        <ButtonText style={{...styles.button_text, color: "#2080FF"}}>Rate</ButtonText>
-                    </Button>
-                </Box>
+                <ButtonBox style={{marginTop: 24, justifyContent: "space-evenly", gap: 24}}>
+                    <FillButton onPress={() => Linking.openURL(newsItem.source)}>
+                        <FillButtonText>See more</FillButtonText>
+                    </FillButton>
+                    <OutlineButton onPress={() => setRateOpen(true)}>
+                        <OutlineButtonText>Rate</OutlineButtonText>
+                    </OutlineButton>
+                </ButtonBox>
             </Box>
             <RateDialog id={newsItem.newsID} token={token.value} open={rateOpen} setOpen={setRateOpen} />
         </>
-
     );
 }
 
 const styles = StyleSheet.create({
     tags: {
-        flexDirection: "row",
-        gap: 6
+
     },
     info: {
-        flexDirection: "row",
-        marginTop: 16,
-        borderBottomWidth: 2,
-        borderColor: "#000000",
-        paddingBottom: 16
+
     },
     button_box: {
         marginTop: 24,
