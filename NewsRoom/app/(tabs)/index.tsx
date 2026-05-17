@@ -8,6 +8,7 @@ import Preferences from "@/interfaces/preferences.interface";
 import FiltersDialog from "@/components/ui/FiltersDialog";
 import * as SecureStore from 'expo-secure-store';
 import {useFocusEffect} from "expo-router";
+import {config} from "@/constants/config";
 
 export default function HomeScreen() {
     const [news, setNews] = useState<News[]>([]);
@@ -29,7 +30,7 @@ export default function HomeScreen() {
     });
 
     const fetchNews = async () => {
-        await axios.get("http://172.22.23.115:3100/news", {
+        await axios.get(`http://${config.serverAddress}:3100/news`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json',
@@ -49,7 +50,7 @@ export default function HomeScreen() {
     }
 
     const fetchPrefs = async () => {
-        axios.get("http://172.22.23.115:3100/user/pref",
+        axios.get(`http://${config.serverAddress}:3100/user/pref`,
             {
                 headers: {
                     'Accept': 'application/json',
@@ -66,7 +67,7 @@ export default function HomeScreen() {
     }
 
     const savePrefs = async () => {
-        axios.post("http://172.22.23.115:3100/user/pref",
+        axios.post(`http://${config.serverAddress}:3100/user/pref`,
             {
                 prefs: prefs
             },

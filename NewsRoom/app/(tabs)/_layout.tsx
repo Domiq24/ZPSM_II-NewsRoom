@@ -11,6 +11,7 @@ import { useRouter } from 'expo-router'
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import DeleteAccountDialog from "@/components/ui/DeleteAccountDialog";
+import {config} from "@/constants/config";
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
@@ -24,7 +25,7 @@ export default function TabLayout() {
             return
 
         const token = JSON.parse(json);
-        await axios.delete(`http://172.22.23.115:3100/user/log-out/${token.tokenID}`, {
+        await axios.delete(`http://${config.serverAddress}:3100/user/log-out/${token.tokenID}`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json',

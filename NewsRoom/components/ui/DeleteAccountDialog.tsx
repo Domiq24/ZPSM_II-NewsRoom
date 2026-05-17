@@ -11,6 +11,7 @@ import {
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import { Router } from 'expo-router';
+import {config} from "@/constants/config";
 
 export default function DeleteAccountDialog({open, setOpen, router}: {open: boolean, setOpen: (open: boolean) => void, router: Router}) {
     const handleDelete = async () => {
@@ -19,7 +20,7 @@ export default function DeleteAccountDialog({open, setOpen, router}: {open: bool
             return
 
         const token = JSON.parse(json);
-        await axios.delete("http://172.22.23.115:3100/user",
+        await axios.delete(`http://${config.serverAddress}:3100/user`,
             {
                 headers: {
                     'Accept': 'application/json',

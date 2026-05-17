@@ -5,6 +5,7 @@ import News from "@/interfaces/news.interface";
 import axios from "axios";
 import Preferences from "@/interfaces/preferences.interface";
 import * as SecureStore from 'expo-secure-store';
+import {config} from "@/constants/config";
 
 export default function SavedNewsScreen() {
     const [savedNews, setSavedNews] = useState<News[]>([])
@@ -23,7 +24,7 @@ export default function SavedNewsScreen() {
     })
 
     const fetchSavedNews = async () => {
-        await axios.get("http://172.22.23.115:3100/news/saved", {
+        await axios.get(`http://${config.serverAddress}/news/saved`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json',

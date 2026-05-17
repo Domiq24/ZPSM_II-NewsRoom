@@ -20,12 +20,13 @@ import {
     FillButtonText,
     OutlineButton, OutlineButtonText
 } from "@/components/ui/StyledComponents";
+import {config} from "@/constants/config";
 
 export default function RateDialog({id, token, open, setOpen}: {id: number, token: string, open: boolean, setOpen: (open: boolean) => void}) {
     const [rating, setRating] = useState(0);
 
     const fetchNewsRating = async () => {
-        await axios.get(`http://172.22.23.115:3100/news/rating/${id}`, {
+        await axios.get(`http://${config.serverAddress}:3100/news/rating/${id}`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json',
@@ -39,7 +40,7 @@ export default function RateDialog({id, token, open, setOpen}: {id: number, toke
     const rateNews = async () => {
         if(rating == 0)
             return
-        await axios.post(`http://172.22.23.115:3100/news/rating/${id}`,
+        await axios.post(`http://${config.serverAddress}:3100/news/rating/${id}`,
             {
                 value: rating
             }, {

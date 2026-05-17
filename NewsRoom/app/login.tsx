@@ -8,6 +8,7 @@ import { useRouter } from "expo-router";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import JWT from "expo-jwt";
+import {config} from "@/constants/config";
 
 export default function LoginScreen() {
     const [login, setLogin] = useState("");
@@ -24,7 +25,7 @@ export default function LoginScreen() {
             setError({message: "Password required", show: true});
         else {
             console.log("Logging in")
-            await axios.post("http://172.22.23.115:3100/user/auth",
+            await axios.post(`http://${config.serverAddress}:3100/user/auth`,
                 {
                     login: login,
                     password: password

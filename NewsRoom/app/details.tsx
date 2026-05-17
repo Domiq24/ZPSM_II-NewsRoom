@@ -21,6 +21,7 @@ import {
     OutlineButton,
     OutlineButtonText
 } from "@/components/ui/StyledComponents";
+import {config} from "@/constants/config";
 
 export default function DetailsScreen() {
     const [rateOpen, setRateOpen] = useState(false);
@@ -43,7 +44,7 @@ export default function DetailsScreen() {
 
     const checkIfNewsSaved = async (item: News) => {
         console.log(token);
-        await axios.get("http://172.22.23.115:3100/news/saved", {
+        await axios.get(`http://${config.serverAddress}:3100/news/saved`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json',
@@ -61,7 +62,7 @@ export default function DetailsScreen() {
     }
 
     const saveNews = async () => {
-        await axios.post(`http://172.22.23.115:3100/news/saved/${newsItem.newsID}`,
+        await axios.post(`http://${config.serverAddress}:3100/news/saved/${newsItem.newsID}`,
             {},
             {
                 headers: {
@@ -76,7 +77,7 @@ export default function DetailsScreen() {
     }
 
     const forgetNews = async () => {
-        await axios.delete(`http://172.22.23.115:3100/news/saved/${newsItem.newsID}`,
+        await axios.delete(`http://${config.serverAddress}:3100/news/saved/${newsItem.newsID}`,
             {
                 headers: {
                     'Accept': 'application/json',

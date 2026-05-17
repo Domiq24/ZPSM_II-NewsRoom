@@ -14,6 +14,7 @@ import {
     StyledPanel
 } from "@/components/ui/StyledComponents";
 import {Text} from "@/components/ui/text";
+import {config} from "@/constants/config";
 
 
 export default function SignUpScreen() {
@@ -45,7 +46,7 @@ export default function SignUpScreen() {
         else if(rPassword != account.password)
             setError({message: "Repeated password must match the original", show: true});
         else {
-            await axios.post("http://172.22.23.115:3100/user",
+            await axios.post(`http://${config.serverAddress}:3100/user`,
                 {
                     user: {
                         ...account,
