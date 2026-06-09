@@ -17,7 +17,7 @@ import {
     ButtonBox,
     FillButton,
     FillButtonText,
-    NewsDetailsInfo,
+    NewsDetailsInfo, NewsDetailsParagraph, NewsDetailsTag, NewsDetailsTitle,
     OutlineButton,
     OutlineButtonText
 } from "@/components/ui/StyledComponents";
@@ -121,17 +121,17 @@ export default function DetailsScreen() {
     return (
         <>
             <Box style={{padding: 16}}>
-                <Heading size="2xl" style={{marginVertical: 0}}>{newsItem.title}</Heading>
+                <NewsDetailsTitle>{newsItem.title}</NewsDetailsTitle>
                 <Box style={{flexDirection: "row", gap: 6}}>
                     {newsItem.topics.map((topic) => {
-                        return (<Text style={{color: "#2080FF"}}>#{topic}</Text>);
+                        return (<NewsDetailsTag>#{topic}</NewsDetailsTag>);
                     })}
                 </Box>
                 <NewsDetailsInfo>
                     <Box style={{flex: 2}}>
-                        <Text style={{fontSize: 16}}>{newsItem.author}</Text>
-                        <Text style={{fontSize: 16}}>{formatDate(newsItem.date)}</Text>
-                        <Text numberOfLines={1}>{newsItem.source}</Text>
+                        <NewsDetailsParagraph>{newsItem.author}</NewsDetailsParagraph>
+                        <NewsDetailsParagraph>{formatDate(newsItem.date)}</NewsDetailsParagraph>
+                        <Text style={{fontSize: 16, fontFamily: 'Grenze_300Light_Italic'}} numberOfLines={1}>{newsItem.source}</Text>
                     </Box>
                     <Box style={{flex: 1, alignItems: "flex-end", justifyContent: "space-evenly"}}>
                         <StarRatingDisplay
@@ -151,7 +151,7 @@ export default function DetailsScreen() {
                     </Box>
                 </NewsDetailsInfo>
                 <ScrollView style={{marginTop: 16}}>
-                    <Text style={{fontSize: 16}}>{newsItem.introduction}</Text>
+                    <NewsDetailsParagraph>{newsItem.introduction}</NewsDetailsParagraph>
                 </ScrollView>
                 <ButtonBox style={{marginTop: 24, justifyContent: "space-evenly", gap: 24}}>
                     <FillButton onPress={() => Linking.openURL(newsItem.source)}>

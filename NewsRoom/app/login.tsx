@@ -2,7 +2,10 @@ import { Box } from "@/components/ui/box";
 import { InputField, InputSlot, InputIcon } from "@/components/ui/input";
 import { EyeIcon, EyeOffIcon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text"
-import { StyledPanel, ButtonBox, StyledInput, FillButton, FillButtonText, OutlineButton, OutlineButtonText } from "@/components/ui/StyledComponents";
+import {
+    StyledPanel, ButtonBox, StyledInput, FillButton, FillButtonText, OutlineButton, OutlineButtonText,
+    StyledInputField
+} from "@/components/ui/StyledComponents";
 import * as SecureStore from 'expo-secure-store';
 import { useRouter } from "expo-router";
 import {useEffect, useState} from "react";
@@ -71,16 +74,14 @@ export default function LoginScreen() {
         <Box>
             <StyledPanel>
                 <StyledInput>
-                    <InputField
-                        style={{fontSize: 24, flex: 1}}
+                    <StyledInputField
                         placeholder="Login"
                         value={login}
                         onChangeText={e => setLogin(e)}
                     />
                 </StyledInput>
                 <StyledInput size="md">
-                    <InputField
-                        style={{fontSize: 24, flex: 1}}
+                    <StyledInputField
                         placeholder="Password"
                         type={showPassword ? "text" : "password"}
                         value={password}

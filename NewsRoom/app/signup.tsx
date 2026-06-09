@@ -11,6 +11,7 @@ import {
     OutlineButton,
     OutlineButtonText,
     StyledInput,
+    StyledInputField,
     StyledPanel
 } from "@/components/ui/StyledComponents";
 import {Text} from "@/components/ui/text";
@@ -72,24 +73,21 @@ export default function SignUpScreen() {
         <Box>
             <StyledPanel>
                 <StyledInput size="md">
-                    <InputField
-                        style={{fontSize: 24, flex: 1}}
+                    <StyledInputField
                         placeholder="Name"
                         value={account.name}
                         onChangeText={e => setAccount({...account, name: e})}
                     />
                 </StyledInput>
                 <StyledInput size="md">
-                    <InputField
-                        style={{fontSize: 24, flex: 1}}
+                    <StyledInputField
                         placeholder="E-mail"
                         value={account.email}
                         onChangeText={e => setAccount({...account, email: e})}
                     />
                 </StyledInput>
                 <StyledInput size="md">
-                    <InputField
-                        style={{fontSize: 24, flex: 1}}
+                    <StyledInputField
                         placeholder="Password"
                         type={showPassword ? "text" : "password"}
                         value={account.password}
@@ -100,8 +98,7 @@ export default function SignUpScreen() {
                     </InputSlot>
                 </StyledInput>
                 <StyledInput size="md">
-                    <InputField
-                        style={{fontSize: 24, flex: 1}}
+                    <StyledInputField
                         placeholder="Repeat Password"
                         type={showRPassword ? "text" : "password"}
                         value={rPassword}

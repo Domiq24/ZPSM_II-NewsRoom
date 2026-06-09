@@ -7,6 +7,7 @@ import {
     AlertDialogBackdrop,
 } from '@/components/ui/alert-dialog';
 import { Heading } from "@/components/ui/heading";
+import {Text} from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
 import StarRating from "react-native-star-rating-widget";
 import axios from "axios";
@@ -65,7 +66,7 @@ export default function RateDialog({id, token, open, setOpen}: {id: number, toke
             <DialogBackdrop />
             <DialogContent style={{top: "40%"}}>
                 <AlertDialogHeader>
-                    <Heading size="3xl" style={{marginLeft: 8}}>Rate</Heading>
+                    <Text style={{marginLeft: 8, marginBottom: 16, fontSize: 38, lineHeight: 40, fontFamily: 'Grenze_700Bold'}}>Rate</Text>
                 </AlertDialogHeader>
                 <AlertDialogBody contentContainerStyle={{alignItems: "center"}} >
                     <StarRating

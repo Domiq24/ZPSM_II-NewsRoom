@@ -24,7 +24,7 @@ export default function SavedNewsScreen() {
     })
 
     const fetchSavedNews = async () => {
-        await axios.get(`http://${config.serverAddress}/news/saved`, {
+        await axios.get(`http://${config.serverAddress}:3100/news/saved`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json',
@@ -50,13 +50,10 @@ export default function SavedNewsScreen() {
     }
 
     useEffect(() => {
-        getToken();
-    }, []);
-
-    useEffect(() => {
-        if(token.value != "")
+        getToken().then(() => {
             fetchSavedNews();
-    }, [token]);
+        });
+    }, []);
 
     return (
         <Box>

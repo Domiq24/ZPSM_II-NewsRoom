@@ -76,7 +76,7 @@ export default function FiltersDialog({open, setOpen, pref, setPref, minDate, ma
             <DialogBackdrop />
             <DialogContent style={{top: "25%"}}>
                 <AlertDialogHeader>
-                    <Heading size="3xl" >Filters</Heading>
+                    <Text style={{fontSize: 32, lineHeight: 34, fontFamily: 'Grenze_700Bold'}} >Filters</Text>
                 </AlertDialogHeader>
                 <FiltersBody>
                     <Input

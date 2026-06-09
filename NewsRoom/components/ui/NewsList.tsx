@@ -6,7 +6,14 @@ import {useEffect, useState} from "react";
 import Preferences from "@/interfaces/preferences.interface";
 import { useRouter, Router } from "expo-router";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
-import {NewsItem, NewsItemSection, NewsItemTags, NewsItemTitle} from "@/components/ui/StyledComponents";
+import {
+    NewsItem,
+    NewsItemSection,
+    NewsItemTags,
+    NewsItemTagsText,
+    NewsItemText,
+    NewsItemTitle
+} from "@/components/ui/StyledComponents";
 
 const NewsListElement = ({newsItem, router}: {newsItem: News, router: Router}) => {
     const dateFormat = (date: Date) => {
@@ -30,12 +37,12 @@ const NewsListElement = ({newsItem, router}: {newsItem: News, router: Router}) =
                 </NewsItemSection>
                 <NewsItemSection>
                     <Box style={{flex: 1}}>
-                        <Text numberOfLines={1} style={{fontSize: 16}}>{newsItem.author}</Text>
-                        <Text style={{fontSize: 16}}>{dateFormat(newsItem.date)}</Text>
+                        <NewsItemText numberOfLines={1}>{newsItem.author}</NewsItemText>
+                        <NewsItemText>{dateFormat(newsItem.date)}</NewsItemText>
                     </Box>
                     <NewsItemTags>
                         {newsItem.topics.map((topic) => {
-                            return (<Text style={{paddingRight: 4, color: "#3070F0"}}>#{topic}</Text>);
+                            return (<NewsItemTagsText>#{topic}</NewsItemTagsText>);
                         })}
                     </NewsItemTags>
                 </NewsItemSection>
@@ -104,7 +111,7 @@ export default function NewsList({news, pref, fetchNews}: {news: News[], pref: P
     return (
         <Box >
             <FlatList
-                style={{paddingBottom: 8}}
+                style={{paddingBottom: 8, minHeight: 300}}
                 data={filtNews}
                 extraData={refreshing}
                 renderItem={({item}) => <NewsListElement newsItem={item} router={router} /> }

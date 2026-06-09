@@ -39,7 +39,144 @@
           "configureAndroidBackup": true
         }
       ],
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "node_modules/@expo-google-fonts/grenze/100Thin/Grenze_100Thin.ttf",
+            "node_modules/@expo-google-fonts/grenze/100Thin_Italic/Grenze_100Thin_Italic.ttf",
+            "node_modules/@expo-google-fonts/grenze/200ExtraLight/Grenze_200ExtraLight.ttf",
+            "node_modules/@expo-google-fonts/grenze/200ExtraLight_Italic/Grenze_200ExtraLight_Italic.ttf",
+            "node_modules/@expo-google-fonts/grenze/300Light/Grenze_300Light.ttf",
+            "node_modules/@expo-google-fonts/grenze/300Light_Italic/Grenze_300Light_Italic.ttf",
+            "node_modules/@expo-google-fonts/grenze/400Regular/Grenze_400Regular.ttf",
+            "node_modules/@expo-google-fonts/grenze/400Regular_Italic/Grenze_400Regular_Italic.ttf",
+            "node_modules/@expo-google-fonts/grenze/500Medium/Grenze_500Medium.ttf",
+            "node_modules/@expo-google-fonts/grenze/500Medium_Italic/Grenze_500Medium_Italic.ttf",
+            "node_modules/@expo-google-fonts/grenze/600SemiBold/Grenze_600SemiBold.ttf",
+            "node_modules/@expo-google-fonts/grenze/600SemiBold_Italic/Grenze_600SemiBold_Italic.ttf",
+            "node_modules/@expo-google-fonts/grenze/700Bold/Grenze_700Bold.ttf",
+            "node_modules/@expo-google-fonts/grenze/700Bold_Italic/Grenze_700Bold_Italic.ttf",
+            "node_modules/@expo-google-fonts/grenze/800ExtraBold/Grenze_800ExtraBold.ttf",
+            "node_modules/@expo-google-fonts/grenze/800ExtraBold_Italic/Grenze_800ExtraBold_Italic.ttf",
+            "node_modules/@expo-google-fonts/grenze/900Black/Grenze_900Black.ttf",
+            "node_modules/@expo-google-fonts/grenze/900Black_Italic/Grenze_900Black_Italic.ttf"
+          ],
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "Grenze",
+                "fontDefinitions": [
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/100Thin/Grenze_100Thin.ttf",
+                    "weight": 100
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/200ExtraLight/Grenze_200ExtraLight.ttf",
+                    "weight": 200
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/300Light/Grenze_300Light.ttf",
+                    "weight": 300
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/400Regular/Grenze_400Regular.ttf",
+                    "weight": 400
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/500Medium/Grenze_500Medium.ttf",
+                    "weight": 500
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/600SemiBold/Grenze_600SemiBold.ttf",
+                    "weight": 600
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/700Bold/Grenze_700Bold.ttf",
+                    "weight": 700
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/800ExtraBold/Grenze_800ExtraBold.ttf",
+                    "weight": 800
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/900Black/Grenze_900Black.ttf",
+                    "weight": 900
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/100Thin_Italic/Grenze_100Thin_Italic.ttf",
+                    "weight": 100,
+                    "style": "italic"
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/200ExtraLight_Italic/Grenze_200ExtraLight_Italic.ttf",
+                    "weight": 200,
+                    "style": "italic"
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/300Light_Italic/Grenze_300Light_Italic.ttf",
+                    "weight": 300,
+                    "style": "italic"
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/400Regular_Italic/Grenze_400Regular_Italic.ttf",
+                    "weight": 400,
+                    "style": "italic"
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/500Medium_Italic/Grenze_500Medium_Italic.ttf",
+                    "weight": 500,
+                    "style": "italic"
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/600SemiBold_Italic/Grenze_600SemiBold_Italic.ttf",
+                    "weight": 600,
+                    "style": "italic"
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/700Bold_Italic/Grenze_700Bold_Italic.ttf",
+                    "weight": 700,
+                    "style": "italic"
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/800ExtraBold_Italic/Grenze_800ExtraBold_Italic.ttf",
+                    "weight": 800,
+                    "style": "italic"
+                  },
+                  {
+                    "path": "node_modules/@expo-google-fonts/grenze/900Black_Italic/Grenze_900Black_Italic.ttf",
+                    "weight": 900,
+                    "style": "italic"
+                  }
+                ]
+              }
+            ]
+          },
+          "ios": {
+            "fonts": [
+              "node_modules/@expo-google-fonts/grenze/100Thin/Grenze_100Thin.ttf",
+              "node_modules/@expo-google-fonts/grenze/100Thin_Italic/Grenze_100Thin_Italic.ttf",
+              "node_modules/@expo-google-fonts/grenze/200ExtraLight/Grenze_200ExtraLight.ttf",
+              "node_modules/@expo-google-fonts/grenze/200ExtraLight_Italic/Grenze_200ExtraLight_Italic.ttf",
+              "node_modules/@expo-google-fonts/grenze/300Light/Grenze_300Light.ttf",
+              "node_modules/@expo-google-fonts/grenze/300Light_Italic/Grenze_300Light_Italic.ttf",
+              "node_modules/@expo-google-fonts/grenze/400Regular/Grenze_400Regular.ttf",
+              "node_modules/@expo-google-fonts/grenze/400Regular_Italic/Grenze_400Regular_Italic.ttf",
+              "node_modules/@expo-google-fonts/grenze/500Medium/Grenze_500Medium.ttf",
+              "node_modules/@expo-google-fonts/grenze/500Medium_Italic/Grenze_500Medium_Italic.ttf",
+              "node_modules/@expo-google-fonts/grenze/600SemiBold/Grenze_600SemiBold.ttf",
+              "node_modules/@expo-google-fonts/grenze/600SemiBold_Italic/Grenze_600SemiBold_Italic.ttf",
+              "node_modules/@expo-google-fonts/grenze/700Bold/Grenze_700Bold.ttf",
+              "node_modules/@expo-google-fonts/grenze/700Bold_Italic/Grenze_700Bold_Italic.ttf",
+              "node_modules/@expo-google-fonts/grenze/800ExtraBold/Grenze_800ExtraBold.ttf",
+              "node_modules/@expo-google-fonts/grenze/800ExtraBold_Italic/Grenze_800ExtraBold_Italic.ttf",
+              "node_modules/@expo-google-fonts/grenze/900Black/Grenze_900Black.ttf",
+              "node_modules/@expo-google-fonts/grenze/900Black_Italic/Grenze_900Black_Italic.ttf"
+            ]
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

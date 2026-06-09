@@ -51,7 +51,7 @@ export default function TabLayout() {
                           trigger={({...triggerProps}) => {
                               return(
                                   <Button {...triggerProps} onPress={() => setMenuOpen(!menuOpen)} >
-                                      <ButtonIcon as={ThreeDotsIcon} width={24} height={24} />
+                                      <ButtonIcon as={ThreeDotsIcon} width={24} height={24} style={{marginRight: 16}} />
                                   </Button>
                               )
                           }}>
@@ -62,7 +62,8 @@ export default function TabLayout() {
                             <MenuItemLabel style={{fontSize: 16, color: "red"}}>Delete account</MenuItemLabel>
                         </MenuItem>
                     </Menu>
-                )
+                ),
+                headerTitleStyle: {fontFamily: 'Grenze_700Bold', fontSize: 28, lineHeight: 30}
             }}>
                 <Tabs.Screen
                     name="index"

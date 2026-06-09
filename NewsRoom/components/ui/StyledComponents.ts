@@ -6,6 +6,7 @@ import { Colors } from "@/constants/theme";
 import { Text } from "@/components/ui/text";
 import {AlertDialogBackdrop, AlertDialogBody, AlertDialogContent} from "@/components/ui/alert-dialog";
 import {HStack} from "@/components/ui/hstack";
+import { Platform } from 'react-native';
 
 export const StyledPanel = styled(Box, {
     width: '80%',
@@ -26,6 +27,12 @@ export const StyledInput = styled(Input, {
     borderBottomWidth: 2,
     justifyContent: "space-between"
 });
+export const StyledInputField = styled(InputField, {
+    fontSize: 26,
+    lineHeight: 28,
+    fontFamily: 'Grenze_400Regular',
+    flex: 1
+})
 export const FillButton = styled(Button, {
     backgroundColor: Colors.blue,
     borderRadius: 8,
@@ -38,8 +45,9 @@ export const FillButton = styled(Button, {
 });
 export const FillButtonText = styled(ButtonText, {
     color: "white",
-    fontSize: 18,
-    fontWeight: "bold"
+    fontSize: 20,
+    lineHeight: 22,
+    fontFamily: 'Grenze_700Bold'
 });
 export const FillButtonRed = styled(FillButton, {
     backgroundColor: Colors.red,
@@ -60,8 +68,9 @@ export const OutlineButton = styled(Button, {
 });
 export const OutlineButtonText = styled(ButtonText, {
     color: Colors.blue,
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: 20,
+    lineHeight: 22,
+    fontFamily: 'Grenze_700Bold',
     ":active": {
         color: Colors.darkBlue
     }
@@ -95,15 +104,30 @@ export const FilterButton = styled(Button, {
     paddingVertical: 6,
     paddingHorizontal: 8
 });
+export const FilterButtonText = styled(ButtonText, {
+    color: "white",
+    fontSize: 18,
+    lineHeight: 20,
+    marginHorizontal: 4,
+    fontFamily: 'Grenze_400Regular'
+})
 export const SearchInput = styled(Input, {
     flex: 1.5,
     backgroundColor: 'white',
     flexDirection: "row",
     alignItems: "center",
+    alignContent: "center",
     height: 38,
     paddingLeft: 8,
     borderRadius: 16
 });
+export const SearchInputField = styled(InputField, {
+    fontFamily: 'Grenze_400Regular',
+    fontSize: 18,
+    paddingBottom: "auto",
+    paddingTop: "auto",
+    verticalAlign: "middle"
+})
 export const NewsItem = styled(Box, {
     flex: 1,
     flexDirection: 'column',
@@ -124,13 +148,26 @@ export const NewsItemSection = styled(Box, {
 export const NewsItemTags = styled(Box, {
     flex: 1,
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
 });
+export const NewsItemTagsText = styled(Text, {
+    paddingRight: 4,
+    color: "#3070F0",
+    fontSize: 16,
+    lineHeight: 18,
+    fontFamily: 'Grenze_400Regular'
+})
 export const NewsItemTitle = styled(Text, {
     flex: 2,
-    fontSize: 18,
-    fontWeight: 'bold'
+    fontSize: 22,
+    fontFamily: "Grenze_700Bold",
+    lineHeight: 24
 });
+export const NewsItemText = styled(Text, {
+    fontSize: 18,
+    lineHeight: 20,
+    fontFamily: 'Grenze_400Regular'
+})
 export const DialogBackdrop = styled(AlertDialogBackdrop, {
     backgroundColor: "black",
     opacity: 0.4,
@@ -161,8 +198,9 @@ export const TagInputField = styled(InputField, {
 });
 export const Label = styled(Text, {
     marginTop: 16,
-    fontSize: 22,
-    fontWeight: "bold"
+    fontSize: 24,
+    lineHeight: 26,
+    fontFamily: 'Grenze_700Bold'
 });
 export const ParallelInputsBox = styled(Box, {
     flexDirection: "row",
@@ -190,4 +228,21 @@ export const FiltersBody = styled(AlertDialogBody, {
     paddingBottom: 16,
     borderBottomWidth: 3,
     borderColor: Colors.grey
+})
+export const NewsDetailsTitle = styled(Text, {
+    marginVertical: 0,
+    fontFamily: 'Grenze_700Bold',
+    fontSize: 28,
+    lineHeight: 30
+})
+export const NewsDetailsTag = styled(Text, {
+    color: "#2080FF",
+    fontSize: 18,
+    lineHeight: 20,
+    fontFamily: 'Grenze_400Regular'
+})
+export const NewsDetailsParagraph = styled(Text, {
+    fontSize: 20,
+    lineHeight: 22,
+    fontFamily: 'Grenze_400Regular'
 })
