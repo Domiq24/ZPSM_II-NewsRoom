@@ -1,5 +1,5 @@
 import { AlertDialog } from '@/components/ui/alert-dialog';
-import { Heading } from '@/components/ui/heading';
+import { Text } from '@/components/ui/text';
 import {
     DialogBackdrop,
     DialogContent,
@@ -37,10 +37,10 @@ export default function DeleteAccountDialog({open, setOpen, router}: {open: bool
     }
 
     return(
-        <AlertDialog isOpen={open}>
+        <AlertDialog useRNModal={true} isOpen={open}>
             <DialogBackdrop />
-            <DialogContent style={{width: "40%"}} >
-                <Heading>Delete account?</Heading>
+            <DialogContent style={{width: "60%", top: "20%"}} >
+                <Text style={{fontSize: 32, lineHeight: 34, fontFamily: 'Grenze_700Bold', marginBottom: 16}}>Delete account?</Text>
                 <ButtonBox>
                     <FillButtonRed>
                         <FillButtonText onPress={handleDelete}>Delete</FillButtonText>

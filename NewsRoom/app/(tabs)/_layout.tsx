@@ -37,6 +37,11 @@ export default function TabLayout() {
         .catch(e => console.error(e.response.data));
     }
 
+    const handleDelete = () => {
+        console.log("Delete");
+        ;
+    }
+
     return (
         <>
             <Tabs screenOptions={{
@@ -44,13 +49,13 @@ export default function TabLayout() {
                 headerShown: false,
                 tabBarButton: HapticTab,
                 headerRight: () => (
-                    <Menu style={{backgroundColor: "white", elevation: 4}} useRNModal={true} placement="bottom left" offset={6}
+                    <Menu style={{backgroundColor: "white", elevation: 4, padding: 8}} useRNModal={true} placement="bottom left" offset={8}
                           isOpen={menuOpen}
                           onClose={() => setMenuOpen(false)}
                           onBlur={() => setMenuOpen(false)}
                           trigger={({...triggerProps}) => {
                               return(
-                                  <Button {...triggerProps} onPress={() => setMenuOpen(!menuOpen)} >
+                                  <Button {...triggerProps} onPress={() => setMenuOpen(true)} >
                                       <ButtonIcon as={ThreeDotsIcon} width={24} height={24} style={{marginRight: 16}} />
                                   </Button>
                               )
@@ -60,6 +65,9 @@ export default function TabLayout() {
                         </MenuItem>
                         <MenuItem style={{padding: 8}} onPress={() => setDeleteOpen(true)} key="delete-account" textValue="Delete account">
                             <MenuItemLabel style={{fontSize: 16, color: "red"}}>Delete account</MenuItemLabel>
+                        </MenuItem>
+                        <MenuItem style={{padding: 8, borderTopWidth: 1, borderTopColor: "black"}} onPress={() => setMenuOpen(false)} key="delete-account" textValue="Delete account">
+                            <MenuItemLabel style={{fontSize: 16}}>Close</MenuItemLabel>
                         </MenuItem>
                     </Menu>
                 ),
@@ -82,7 +90,7 @@ export default function TabLayout() {
                     }}
                 />
             </Tabs>
-            <DeleteAccountDialog open={deleteOpen} setOpen={setDeleteOpen} />
+            <DeleteAccountDialog open={deleteOpen} setOpen={setDeleteOpen} router={router} />
         </>
     );
 }
