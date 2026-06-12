@@ -13,7 +13,7 @@ class NewsController implements Controller {
     }
 
     private initializeRoutes() {
-        this.router.get(this.path, this.returnAllNews);
+        this.router.get(this.path, auth, this.returnAllNews);
         this.router.get(`${this.path}/saved`, auth, this.returnSavedNews);
         this.router.get(`${this.path}/rating/:newsID`, auth, this.returnUserNewsRating);
         this.router.post(`${this.path}/saved/:newsID`, auth, this.saveNews);

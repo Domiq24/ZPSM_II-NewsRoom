@@ -97,9 +97,7 @@ export default function DetailsScreen() {
     const getToken = async () => {
         const json = await SecureStore.getItemAsync("token");
         if(json)
-        {
             setToken(JSON.parse(json));
-        }
     }
 
     useEffect(() => {
@@ -114,7 +112,7 @@ export default function DetailsScreen() {
     }, []);
 
     useEffect(() => {
-        if(token.value != "" && newsItem.title != "")
+        if(token.tokenID && newsItem.title != "")
             checkIfNewsSaved(newsItem)
     }, [token, newsItem]);
 

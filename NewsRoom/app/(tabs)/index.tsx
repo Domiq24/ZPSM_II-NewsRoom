@@ -99,11 +99,16 @@ export default function HomeScreen() {
     }
 
     useEffect(() => {
-        getToken().then(() => {
+        getToken()
+    }, []);
+
+    useEffect(() => {
+        if(token.tokenID)
+        {
             getPrefs();
             fetchNews();
-        })
-    }, []);
+        }
+    }, [token]);
 
     useEffect(() => {
         if(news.length > 0) {

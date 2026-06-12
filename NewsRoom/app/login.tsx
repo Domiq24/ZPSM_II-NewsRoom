@@ -7,11 +7,13 @@ import {
     StyledInputField
 } from "@/components/ui/StyledComponents";
 import * as SecureStore from 'expo-secure-store';
-import { useRouter } from "expo-router";
+import {Stack, useRouter} from "expo-router";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import JWT from "expo-jwt";
 import {config} from "@/constants/config";
+import {DarkTheme, DefaultTheme, ThemeProvider} from "@react-navigation/native";
+import {StatusBar} from "expo-status-bar";
+import JWT from "expo-jwt";
 
 export default function LoginScreen() {
     const [login, setLogin] = useState("");
@@ -22,9 +24,9 @@ export default function LoginScreen() {
 
     const handleLogIn = async () => {
         setError({message: "", show: false});
-        if(login === "")
+        if (login === "")
             setError({message: "Login required", show: true});
-        else if(password === "")
+        else if (password === "")
             setError({message: "Password required", show: true});
         else {
             console.log("Logging in")
@@ -40,29 +42,34 @@ export default function LoginScreen() {
                     }
                 }
             )
-            .then(res => {
-                SecureStore.setItemAsync("token", JSON.stringify(res.data));
-            })
-            .then(() => router.replace("/(tabs)"))
-            .catch(e => {
-                console.log(e.response.data);
-                setError({message: e.response.data, show: true})
-            });
+                .then(res => {
+                    SecureStore.setItemAsync("token", JSON.stringify(res.data));
+                })
+                .then(() => router.replace("/(tabs)"))
+                .catch(e => {
+                    console.log(e.response.data);
+                    setError({message: e.response.data, show: true})
+                });
         }
     }
 
     const checkToken = async () => {
-        const json = SecureStore.getItem("token");
-        if(!json)
-            return
-
         try {
+            const json = await SecureStore.getItemAsync("token");
+            if(!json)
+                return
+
             const token = JSON.parse(json);
             const decoded = JWT.decode(token.value, "secret");
-            router.replace("/(tabs)");
-        } catch (e) {
-            if(e.name === 'TokenExpiredError')
+            console.log(decoded)
+
+            if(decoded.exp < Date.now())
+                router.replace("/(tabs)");
+            else
                 await SecureStore.deleteItemAsync("token");
+        } catch (e) {
+            console.log(e);
+            await SecureStore.deleteItemAsync("token");
         }
     }
 

@@ -50,10 +50,13 @@ export default function SavedNewsScreen() {
     }
 
     useEffect(() => {
-        getToken().then(() => {
-            fetchSavedNews();
-        });
+        getToken();
     }, []);
+
+    useEffect(() => {
+        if(token.tokenID)
+            fetchSavedNews();
+    }, [token]);
 
     return (
         <Box>
