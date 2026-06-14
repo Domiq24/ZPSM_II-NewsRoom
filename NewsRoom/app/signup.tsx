@@ -61,7 +61,7 @@ export default function SignUpScreen() {
                     }
                 }
             )
-            .then(() => router.replace("./login"))
+            .then(() => router.dismissTo("/login"))
             .catch(e => {
                 console.log(e.response.data);
                 setError({message: e.response.data, show: true});
@@ -118,7 +118,7 @@ export default function SignUpScreen() {
                         </FillButtonText>
                     </FillButton>
                     <OutlineButton
-                        onPress={() => router.dismissTo('./login')}
+                        onPress={() => router.dismissTo('/login')}
                     >
                         <OutlineButtonText>
                             Log in

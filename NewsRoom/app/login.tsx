@@ -108,7 +108,7 @@ export default function LoginScreen() {
                         </FillButtonText>
                     </FillButton>
                     <OutlineButton
-                        onPress={() => router.push("./signup")}
+                        onPress={() => router.push("/signup")}
                     >
                         <OutlineButtonText>
                             Sign up

@@ -22,7 +22,7 @@ export default function HomeToolbar({pref, setPref, setOpen}: {pref: Preferences
             <Picker
                 selectedValue={pref.sort}
                 onValueChange={(itemValue) => handleInput(itemValue, "sort")}
-                style={{flex: 1.2, color: "white", fontFamily: 'Grenze_400Regular'}}
+                style={{flex: 1.2, color: "white", fontFamily: 'Grenze'}}
                 mode="dropdown"
                 dropdownIconColor="white"
                 selectionColor="#2080FF"

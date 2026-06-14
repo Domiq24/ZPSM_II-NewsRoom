@@ -29,7 +29,8 @@ export default function DeleteAccountDialog({open, setOpen, router}: {open: bool
                 }
             }
         )
-        .then(() => {
+        .then(async () => {
+            await SecureStore.deleteItemAsync("token");
             setOpen(false);
             router.replace("/login")
         } )
